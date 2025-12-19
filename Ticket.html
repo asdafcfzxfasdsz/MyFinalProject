@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Booking</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 为输入框和日期选择器添加基本样式 */
+        .ticket-input {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 5px 0;
+        }
+        
+        .ticket-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+        
+        .form-row {
+            margin: 15px 0;
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="Travel.html">Travel</a></li>
+            <li><a href="AI Chat.html">AI Chat</a></li>
+            <li><a href="Food.html">Food</a></li>
+            <li><a href="Guide.html">Guide</a></li>
+            <li><a href="Ticket.html" class="active">Ticket</a></li>
+            <li><a href="Upload.html">Upload</a></li>
+        </ul>
+         <div class="nav-right">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search anything">
+            </div>
+            <div class="user-avatar">User</div>
+            <span>🏷️</span>
+        </div>
+    </nav>
+
+   <section class="hero-section">
+        <a href="#" class="hero-card">
+            <img src="image\1.png" alt="Moscow">
+            <div class="hero-text">
+                <h3>Red Square In Moscow</h3>
+                <p>Ah, The Joy Of The Open Road...</p>
+            </div>
+        </a>
+        <a href="#" class="hero-card">
+            <img src="image\2.png" alt="Night View">
+            <div class="hero-text">
+                <h3>My Travel To Moscow</h3>
+                <p>Download Torrents From Verified...</p>
+            </div>
+        </a>
+        <a href="#" class="hero-card">
+            <img src="image\3.png" alt="Couple">
+            <div class="hero-text">
+                <h3>We Are In Moscow</h3>
+                <p>A Single Monitor Manifesto...</p>
+            </div>
+        </a>
+    </section>
+    <div class="content-container">
+        <div class="ticket-tabs">
+            <button class="tab-btn">train</button>
+            <button class="tab-btn">plane</button>
+            <button class="tab-btn">bus</button>
+        </div>
+
+        <div class="ticket-form">
+            <!-- 修改为可输入的出发地和目的地 -->
+            <div class="form-row">
+                <div class="input-group">
+                    <input type="text" class="ticket-input" placeholder="Departure point" id="departure">
+                    <span style="font-size: 24px; color: #666;">⇄</span>
+                    <input type="text" class="ticket-input" placeholder="Destination" id="destination">
+                </div>
+            </div>
+            
+            <!-- 修改为日期选择器 -->
+            <div class="form-row">
+                <input type="date" class="ticket-input" id="travel-date">
+            </div>
+
+            <button style="width: 100%; background: var(--button-blue); color: white; padding: 20px; border: none; border-radius: 50px; font-size: 24px; cursor: pointer;">
+                Search
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 设置默认日期为今天
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            document.getElementById('travel-date').value = formattedDate;
+            
+            // 添加搜索功能
+            document.querySelector('.ticket-form button').addEventListener('click', function() {
+                const departure = document.getElementById('departure').value;
+                const destination = document.getElementById('destination').value;
+                const date = document.getElementById('travel-date').value;
+                
+                if (departure && destination && date) {
+                    alert(`Searching for tickets from ${departure} to ${destination} on ${date}`);
+                    // 这里可以添加实际的搜索逻辑
+                } else {
+                    alert('Please fill in all fields');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

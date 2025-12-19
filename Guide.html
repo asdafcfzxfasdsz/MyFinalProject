@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Guide Map</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 地图容器样式 */
+        .map-container {
+            width: 100%;
+            height: 400px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #ddd;
+        }
+        
+        /* 地图样式 */
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 位置信息面板样式 */
+        .location-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            min-width: 200px;
+        }
+        
+        .location-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .location-address {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .location-coordinates {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* 地图控制按钮样式 */
+        .map-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .map-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="Travel.html">Travel</a></li>
+            <li><a href="AI Chat.html">AI Chat</a></li>
+            <li><a href="Food.html">Food</a></li>
+            <li><a href="Guide.html" class="active">Guide</a></li>
+            <li><a href="Ticket.html">Ticket</a></li>
+            <li><a href="Upload.html">Upload</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search anything">
+            </div>
+            <div class="user-avatar">User</div>
+            <span>🏷️</span>
+        </div>
+    </nav>
+
+    <!-- 顶部三张图片，保持原有布局 -->
+   <section class="hero-section">
+        <a href="#" class="hero-card">
+            <img src="image\1.png" alt="Moscow">
+            <div class="hero-text">
+                <h3>Red Square In Moscow</h3>
+                <p>Ah, The Joy Of The Open Road...</p>
+            </div>
+        </a>
+        <a href="#" class="hero-card">
+            <img src="image\2.png" alt="Night View">
+            <div class="hero-text">
+                <h3>My Travel To Moscow</h3>
+                <p>Download Torrents From Verified...</p>
+            </div>
+        </a>
+        <a href="#" class="hero-card">
+            <img src="image\3.png" alt="Couple">
+            <div class="hero-text">
+                <h3>We Are In Moscow</h3>
+                <p>A Single Monitor Manifesto...</p>
+            </div>
+        </a>
+    </section>
+
+    <div style="max-width: 1200px; margin: 20px auto; padding: 0 20px;">
+        <!-- 地图容器 -->
+        <div class="map-container">
+            <div id="map"></div>
+            
+            <!-- 位置信息面板 -->
+            <div class="location-panel">
+                <div class="location-title">当前位置</div>
+                <div class="location-address">北京市朝阳区建国门外大街1号</div>
+                <div class="location-coordinates">39.9042° N, 116.4074° E</div>
+            </div>
+            
+            <!-- 地图控制按钮 -->
+            <div class="map-controls">
+                <button class="map-btn" onclick="zoomIn()">+</button>
+                <button class="map-btn" onclick="zoomOut()">-</button>
+                <button class="map-btn" onclick="locateMe()">📍</button>
+            </div>
+        </div>
+
+        <!-- 搜索框 -->
+        <div class="guide-search-container" style="margin-top: 30px; display: flex; align-items: center; background: white; padding: 10px 15px; border-radius: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <span style="font-size: 24px; margin-right: 10px; color: #4CAF50;">+</span>
+            <input type="text" placeholder="Where You Want To Go" style="border: none; outline: none; flex: 1; font-size: 16px;">
+            <span style="font-size: 20px; background: #f0f0f0; padding: 8px; border-radius: 50%; cursor: pointer;">🔍</span>
+        </div>
+    </div>
+
+    <script>
+        // 初始化地图（使用Leaflet.js作为示例）
+        function initMap() {
+            // 创建地图实例
+            const map = L.map('map').setView([39.9042, 116.4074], 13);
+            
+            // 添加地图图层（使用OpenStreetMap作为示例）
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // 添加当前位置标记
+            const marker = L.marker([39.9042, 116.4074]).addTo(map)
+                .bindPopup('当前位置<br>北京市朝阳区建国门外大街1号')
+                .openPopup();
+            
+            // 保存地图实例供其他函数使用
+            window.map = map;
+            window.marker = marker;
+        }
+        
+        // 地图放大
+        function zoomIn() {
+            if (window.map) {
+                window.map.zoomIn();
+            }
+        }
+        
+        // 地图缩小
+        function zoomOut() {
+            if (window.map) {
+                window.map.zoomOut();
+            }
+        }
+        
+        // 定位到我的位置
+        function locateMe() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    if (window.map && window.marker) {
+                        window.map.setView([lat, lng], 15);
+                        window.marker.setLatLng([lat, lng]);
+                        
+                        // 更新位置信息面板
+                        document.querySelector('.location-address').textContent = '正在获取详细地址...';
+                        document.querySelector('.location-coordinates').textContent = `${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E`;
+                        
+                        // 这里可以添加反向地理编码API调用获取详细地址
+                    }
+                }, function(error) {
+                    alert('无法获取您的位置信息：' + error.message);
+                });
+            } else {
+                alert('您的浏览器不支持地理位置服务');
+            }
+        }
+        
+        // 页面加载完成后初始化地图
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加Leaflet.js CSS和JS（如果尚未加载）
+            if (!document.querySelector('link[href*="leaflet"]')) {
+                const leafletCSS = document.createElement('link');
+                leafletCSS.rel = 'stylesheet';
+                leafletCSS.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
+                document.head.appendChild(leafletCSS);
+                
+                const leafletJS = document.createElement('script');
+                leafletJS.src = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js';
+                leafletJS.onload = initMap;
+                document.head.appendChild(leafletJS);
+            } else {
+                initMap();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload & Comments</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 为了复现图片效果，补充必要的 CSS */
+        body {
+            background-color: #f2fbf2; /* 图片中非常淡的背景色 */
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        /* --- 导航栏修正：使用css/style.css中的样式 --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #84F318; /* 使用CSS变量中的primary-green */
+            padding: 15px 40px; /* 使用CSS文件中的值 */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            margin: 0; /* 移除自定义外边距，使用CSS文件中的样式 */
+            border-radius: 0; /* 移除圆角，使用CSS文件中的样式 */
+            box-shadow: none; /* 移除阴影，使用CSS文件中的样式 */
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            font-weight: bold;
+            font-size: 16px; /* 使用CSS文件中的值 */
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333333; /* 使用CSS变量中的text-dark */
+            font-size: 16px; /* 使用CSS文件中的值 */
+            font-weight: bold; /* 使用CSS文件中的值 */
+        }
+
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            color: #FF0000; /* 使用CSS变量中的active-red */
+            text-decoration: underline;
+            text-underline-offset: 5px;
+        }
+
+        /* Ticket 红色高亮 - 修改为第5个菜单项 */
+        .nav-links li:nth-child(5) a {
+            color: #FF0000; /* 使用CSS变量中的active-red */
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* 使用CSS文件中的值 */
+        }
+
+        .search-bar {
+            background: white;
+            border-radius: 20px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+            width: 250px; /* 使用CSS文件中的值 */
+            position: relative;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            margin-left: 10px; /* 使用CSS文件中的值 */
+            font-size: 14px;
+            color: #666;
+        }
+
+      
+        
+
+        .user-avatar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333333; /* 使用CSS变量中的text-dark */
+        }
+
+        .tag-icon {
+            font-size: 18px;
+        }
+
+        /* --- 英雄区域布局 --- */
+        .hero-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            display: flex;
+            gap: 20px;
+            padding: 0 20px;
+            overflow-x: auto;
+        }
+
+        /* 修改：将 .hero-card 设为 flex item 并且是链接时的样式 */
+        a.hero-card, .hero-card {
+            flex: 1;
+            min-width: 300px;
+            height: 200px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: block; /* 确保a标签作为块级元素 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* 添加过渡动画 */
+        }
+
+        /* 鼠标悬停特效：上浮 + 阴影 */
+        a.hero-card:hover, .hero-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .hero-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            font-size: 14px;
+            color: #333333; /* 使用CSS变量中的text-dark */
+        }
+
+        .hero-text h3 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .hero-text p {
+            margin: 0;
+            font-size: 12px;
+            color: #666666; /* 使用CSS变量中的text-light */
+        }
+
+        /* --- 中间内容区域布局 --- */
+        .upload-layout {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            gap: 30px;
+        }
+
+        .comments-section, .instagram-section {
+            flex: 1;
+            background: #fff; /* 不透明白色背景 */
+            border-radius: 15px; /* 大圆角 */
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03); /* 轻微阴影 */
+        }
+
+        .section-title {
+            margin-top: 0;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            color: #444;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: #e63946; /* 标题红竖线 */
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        /* Insta Grid */
+        .insta-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .insta-item {
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            display: block; /* 确保链接也是块级显示 */
+        }
+        
+        .insta-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .insta-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* --- 新增：Footer 样式 --- */
+        .footer-wrapper {
+            margin-top: 40px;
+        }
+
+        .footer-main {
+            display: flex;
+            padding: 40px 60px;
+            gap: 60px;
+            background-color: transparent; /* 上半部分背景透明 */
+        }
+
+        .footer-col {
+            flex: 1;
+        }
+        
+        .footer-col.news { flex: 2; } /* Mega News 宽一点 */
+
+        .footer-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            background-color: #e63946;
+            margin-right: 8px;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .newsletter-box {
+            position: relative;
+            max-width: 400px;
+        }
+        
+        .newsletter-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 6px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .newsletter-box button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .cat-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .cat-list li { margin-bottom: 12px; }
+        
+        .cat-list a {
+            text-decoration: none;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            margin-right: 10px;
+            font-weight: 500;
+        }
+        
+        .bg-insta { background-color: #ff5c8d; }
+        
+        .bg-twitter { background-color: #55acee; }
+
+        .footer-bottom {
+            background-color: #e8e8e8; /* 底部灰色条 */
+            padding: 15px 60px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .footer-bottom a {
+            color: #888;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="Travel.html">Travel</a></li>
+            <li><a href="AI Chat.html">AI Chat</a></li>
+            <li><a href="Food.html">Food</a></li>
+            <li><a href="Guide.html">Guide</a></li>
+            <li><a href="Ticket.html">Ticket</a></li>
+            <li><a href="Upload.html" class="active">Upload</a></li>
+        </ul>
+         <div class="nav-right">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search anything">
+            </div>
+            <div class="user-avatar">User</div>
+            <span>🏷️</span>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <a href="#" class="hero-card">
+            <img src="image\1.png" alt="Moscow">
+            <div class="hero-text">
+                <h3>Red Square In Moscow</h3>
+                <p>Ah, The Joy Of The Open Road...</p>
+            </div>
+        </a>
+        <a href="#" class="hero-card">
+            <img src="image\2.png" alt="Night View">
+            <div class="hero-text">
+                <h3>My Travel To Moscow</h3>
+                <p>Download Torrents From Verified...</p>
+            </div>
+        </a>
+        <a href="#" class="hero-card">
+            <img src="image\3.png" alt="Couple">
+            <div class="hero-text">
+                <h3>We Are In Moscow</h3>
+                <p>A Single Monitor Manifesto...</p>
+            </div>
+        </a>
+    </section>
+
+    <div class="upload-layout">
+        <div class="comments-section">
+            <h2 class="section-title">New Comments</h2>
+            <div style="margin-bottom: 20px;">
+                <h4>Ellsmartx</h4>
+                <p style="font-size: 14px; color: #666;">How Nice Does This Look 😍 I Feel It Should Be Delicious...</p>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <h4>Cassia</h4>
+                <p style="font-size: 14px; color: #666;">Take A Rest, I'll Be Cheer Up You Again...</p>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <h4>Amanda</h4>
+                <p style="font-size: 14px; color: #666;">You Were Stunning Today, Jan! 💗 Great Match 👍👍</p>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <h4>Denis Simonassi</h4>
+                <p style="font-size: 14px; color: #666;">It Was A Great Match Today Janzi! You Did Great😉🇩🇪</p>
+            </div>
+        </div>
+
+        <div class="instagram-section">
+            <h2 class="section-title">Follow On Instagram</h2>
+            <div class="insta-grid">
+                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?w=300" alt="Car"></a>
+                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300" alt="Pug"></a>
+                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300" alt="Neon"></a>
+                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=300" alt="Food"></a>
+                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" alt="Headphone"></a>
+                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300" alt="Dance"></a>
+                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=300" alt="Dog"></a>
+                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=300" alt="Neon"></a>
+                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?w=300" alt="Boxer"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-wrapper">
+        <div class="footer-main">
+            <div class="footer-col news">
+                <h3 class="footer-title">Mega News</h3>
+                <p class="footer-text">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi. Arcu cursus vitae congue mauris rhoncus aenean vel elit scelerisque. In egestas erat imperdiet sed euismod nisi porta lorem mollis. Morbi tristique senectus et netus. Mattis pell.
+                </p>
+                <h3 class="footer-title">Newsletters</h3>
+                <div class="newsletter-box">
+                    <input type="email" placeholder="Write Your Email ..">
+                    <button>✉️</button>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3 class="footer-title">Categories</h3>
+                <ul class="cat-list">
+                    <li><a href="#">Culture</a></li>
+                    <li><a href="#">Fashion</a></li>
+                    <li><a href="#">Featured</a></li>
+                    <li><a href="#">Food</a></li>
+                    <li><a href="#">Healthy Living</a></li>
+                    <li><a href="#">Technology</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3 class="footer-title">Social Network</h3>
+                <div style="display: flex;">
+                    <a href="#" class="social-btn bg-insta">📷 Instagram</a>
+                    <a href="#" class="social-btn bg-twitter">🐦 Twitter</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>
+                <a href="#">Privacy Policy</a> | <a href="#">Terms & Conditions</a>
+            </div>
+            <div>
+                All Copyright (C) 2022 Reserved
+            </div>
+        </div>
+    </div>
+</body>
+</html>

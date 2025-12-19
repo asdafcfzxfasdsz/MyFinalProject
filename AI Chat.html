@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Chat</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .weather-card {
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="Travel.html">Travel</a></li>
+            <li><a href="AI Chat.html" class="active">AI Chat</a></li>
+            <li><a href="Food.html">Food</a></li>
+            <li><a href="Guide.html">Guide</a></li>
+            <li><a href="Ticket.html">Ticket</a></li>
+            <li><a href="Upload.html">Upload</a></li>
+        </ul>
+       <div class="nav-right">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search anything">
+            </div>
+            <div class="user-avatar">User</div>
+            <span>🏷️</span>
+        </div>
+    </nav>
+
+    <!-- 修改图片显示部分：添加图片占位符 -->
+   <section class="hero-section">
+        <a href="#" class="hero-card">
+            <img src="image\1.png" alt="Moscow">
+            <div class="hero-text">
+                <h3>Red Square In Moscow</h3>
+                <p>Ah, The Joy Of The Open Road...</p>
+            </div>
+        </a>
+        <a href="#" class="hero-card">
+            <img src="image\2.png" alt="Night View">
+            <div class="hero-text">
+                <h3>My Travel To Moscow</h3>
+                <p>Download Torrents From Verified...</p>
+            </div>
+        </a>
+        <a href="#" class="hero-card">
+            <img src="image\3.png" alt="Couple">
+            <div class="hero-text">
+                <h3>We Are In Moscow</h3>
+                <p>A Single Monitor Manifesto...</p>
+            </div>
+        </a>
+    </section>
+
+    <div class="content-container">
+        <div class="weather-grid">
+            <div style="background: white; color: black; padding: 20px; border-radius: 10px;">
+                <h2>29°C</h2>
+                <p>New York</p>
+            </div>
+            <div class="weather-card" style="background: orange;">
+                <div>Ankara <br> 32°C</div>
+                <div>☀️</div>
+            </div>
+            <div class="weather-card" style="background: #4A90E2;">
+                <div>Alaska <br> 16°C</div>
+                <div>❄️</div>
+            </div>
+            <div class="weather-card" style="background: #7ED321;">
+                <div>Berlin <br> 24°C</div>
+                <div>☁️</div>
+            </div>
+            <div class="weather-card" style="background: #9013FE;">
+                <div>Paris <br> 27°C</div>
+                <div>🌙</div>
+            </div>
+        </div>
+
+        <div class="chat-banner">
+            The world is wide and bright,<br>
+            may every step shine with light.
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 50px; display: flex; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-top: 50px;">
+            <span style="font-size: 30px; margin-right: 15px;">+</span>
+            <input type="text" placeholder="you can type what you want" style="border: none; outline: none; flex: 1; font-size: 18px;">
+            <span style="font-size: 24px;">🎤 ılı</span>
+        </div>
+    </div>
+</body>
+</html>
