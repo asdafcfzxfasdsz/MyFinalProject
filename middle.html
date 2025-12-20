@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Middle - Travel Agent</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .nav-links a.active{
+            display: inline-block;
+            transform: translateY(-6px) scale(1.15);
+            font-weight: 700;
+            animation: navPop 450ms ease-out;
+            transition: transform 220ms ease, font-weight 220ms ease;
+        }
+        @keyframes navPop{
+            0%{ transform: translateY(0) scale(1); }
+            60%{ transform: translateY(-12px) scale(1.25); }
+            100%{ transform: translateY(-6px) scale(1.15); }
+        }
+        .user-avatar{
+            cursor: pointer;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Xiaohongshu-like layout (fixed grid for consistent arrangement) */
+        .mid-wrap{
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 18px 14px 30px;
+        }
+        .mid-top{
+            display:flex;
+            align-items:center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .mid-back{
+            text-decoration:none;
+            color: inherit;
+            font-weight: 600;
+            cursor:pointer;
+        }
+        .mid-title{
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0;
+        }
+        .mid-tabs{
+            display:flex;
+            gap: 10px;
+            margin: 12px 0 16px;
+            flex-wrap: wrap;
+        }
+        .mid-tab{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding: 8px 12px;
+            border: 1px solid rgba(0,0,0,0.12);
+            border-radius: 999px;
+            text-decoration:none;
+            color: inherit;
+            cursor:pointer;
+            background: rgba(0,0,0,0.02);
+        }
+        .mid-tab.active{
+            border-color: rgba(0,0,0,0.35);
+            font-weight: 700;
+        }
+
+        /* ✅ 固定 Grid（保证四个标签排布一致） */
+        .xh-feed{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        @media (max-width: 720px){
+            .xh-feed{ grid-template-columns: 1fr; }
+        }
+
+        .xh-card{
+            display: block;
+            width: 100%;
+            text-decoration:none;
+            color: inherit;
+            cursor: pointer;
+        }
+        .xh-box{
+            border-radius: 14px;
+            overflow:hidden;
+            background: #fff;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+        /* ✅ 统一图片比例，保证卡片高度一致（排布更稳定） */
+        .xh-img{
+            width:100%;
+            display:block;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+        }
+        .xh-body{
+            padding: 10px 10px 12px;
+        }
+        .xh-h3{
+            margin: 0 0 6px;
+            font-size: 14px;
+            line-height: 1.25;
+            font-weight: 800;
+        }
+        .xh-desc{
+            margin: 0 0 10px;
+            font-size: 12px;
+            color: rgba(0,0,0,0.65);
+            line-height: 1.35;
+        }
+        .xh-meta{
+            display:flex;
+            align-items:center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(0,0,0,0.55);
+        }
+        .xh-user{
+            display:flex;
+            align-items:center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .xh-user img{
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .xh-user span{
+            max-width: 120px;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="Travel.html" class="active">Travel</a></li>
+            <li><a href="AI Chat.html">AI Chat</a></li>
+            <li><a href="Food.html">Food</a></li>
+            <li><a href="Guide.html">Guide</a></li>
+            <li><a href="Ticket.html">Ticket</a></li>
+            <li><a href="Upload.html">Upload</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search anything">
+            </div>
+            <div class="user-avatar" id="userAvatar" title="Click to go to Login">User</div>
+            <span>🏷️</span>
+        </div>
+    </nav>
+
+    <div class="mid-wrap">
+        <div class="mid-top">
+            <a class="mid-back" href="Travel.html">&lt; Back</a>
+            <h1 class="mid-title" id="pageTitle">Topic</h1>
+        </div>
+
+        <!-- Tabs (all clickable) -->
+        <div class="mid-tabs">
+            <a class="mid-tab" id="tabPopular" href="middle.html?topic=popular">🔥 Popular</a>
+            <a class="mid-tab" id="tabNew" href="middle.html?topic=new">🆕 New</a>
+            <a class="mid-tab" id="tabTravel" href="middle.html?topic=travel">🧭 Travel</a>
+            <a class="mid-tab" id="tabFood" href="middle.html?topic=food">🍜 Food</a>
+        </div>
+
+        <!-- Grid feed -->
+        <div class="xh-feed" id="feed"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const userAvatar = document.getElementById('userAvatar');
+
+            function getCurrentUserPhone(){
+                const candidates = [
+                    localStorage.getItem('travelAgentCurrentUser'),
+                    localStorage.getItem('travelAgentCurrentPhone'),
+                    localStorage.getItem('currentUserPhone'),
+                    localStorage.getItem('travelAgentLastUser')
+                ].filter(Boolean);
+                if (candidates.length > 0) return candidates[0];
+
+                try{
+                    const users = JSON.parse(localStorage.getItem('travelAgentUsers') || '{}');
+                    const keys = Object.keys(users);
+                    if (keys.length === 1) return keys[0];
+                }catch(e){}
+
+                return '';
+            }
+
+            const phone = getCurrentUserPhone();
+            userAvatar.textContent = phone ? phone : 'User';
+            userAvatar.addEventListener('click', function(){ window.location.href = 'index.html'; });
+
+            const params = new URLSearchParams(window.location.search);
+            const topic = (params.get('topic') || 'popular').toLowerCase();
+
+            const titleMap = {
+                popular: 'Popular Picks',
+                new: 'New Picks',
+                travel: 'Travel Picks',
+                food: 'Food Picks'
+            };
+
+            document.getElementById('pageTitle').textContent = titleMap[topic] || 'Popular Picks';
+
+            // Highlight current tab
+            const tabMap = { popular: 'tabPopular', new: 'tabNew', travel: 'tabTravel', food: 'tabFood' };
+            const activeTabId = tabMap[topic] || 'tabPopular';
+            const activeTab = document.getElementById(activeTabId);
+            if (activeTab) activeTab.classList.add('active');
+
+            /**
+             * ✅ IMPORTANT (for easy replacement):
+             * - All images use your common format:  src="image\X.png"
+             * - Replace covers by changing "cover" field below
+             * - Replace avatars by changing "avatar" field below
+             * - Keep count SAME across all topics (now: 8)
+             */
+
+            // ✅ Fixed card count across all tabs
+            const CARD_COUNT = 8;
+
+            // ✅ Local images (you can replace anytime)
+            // NOTE: using your common path style with backslash: image\1.png
+            const coversPool = [
+                "image\\1.png", // Replace with your own cover image
+                "image\\2.png", // Replace with your own cover image
+                "image\\3.png", // Replace with your own cover image
+                "image\\4.png", // Replace with your own cover image
+                "image\\5.png", // Replace with your own cover image
+                "image\\6.png"  // Replace with your own cover image
+            ];
+
+            const avatarsPool = [
+                "image\\3.png", // Replace with your own avatar
+                "image\\5.png", // Replace with your own avatar
+                "image\\2.png", // Replace with your own avatar
+                "image\\4.png"  // Replace with your own avatar
+            ];
+
+            // ✅ Same layout + same count (8) for each topic
+            const data = {
+                popular: [
+                    { id:"p1", title:"Red Square Photo Walk", desc:"Landmarks + sunset route.", cover:coversPool[0], user:"Kira", avatar:avatarsPool[0], likes:"12.4k" },
+                    { id:"p2", title:"Moscow Night View Spots", desc:"City lights route for photos.", cover:coversPool[1], user:"Lena", avatar:avatarsPool[1], likes:"9.2k" },
+                    { id:"p3", title:"Couple Trip: 48H Plan", desc:"Easy itinerary + cafés.", cover:coversPool[2], user:"Mila", avatar:avatarsPool[2], likes:"7.5k" },
+                    { id:"p4", title:"Boating Season Checklist", desc:"Pack list + safety tips.", cover:coversPool[1], user:"James", avatar:avatarsPool[3], likes:"8.1k" },
+                    { id:"p5", title:"Laptop For Programming", desc:"Specs that matter most.", cover:coversPool[3], user:"Louis", avatar:avatarsPool[1], likes:"5.1k" },
+                    { id:"p6", title:"Self-driving Story", desc:"How it was built step by step.", cover:coversPool[5], user:"Mary", avatar:avatarsPool[0], likes:"6.3k" },
+                    { id:"p7", title:"Street Snack Favorites", desc:"Budget-friendly picks.", cover:coversPool[4], user:"Jon", avatar:avatarsPool[2], likes:"4.7k" },
+                    { id:"p8", title:"CityWalk Must-Know Tips", desc:"Walk smarter, see more.", cover:coversPool[0], user:"Ari", avatar:avatarsPool[3], likes:"3.9k" }
+                ],
+                new: [
+                    { id:"n1", title:"Mobile UX Trends", desc:"Practical patterns & tips.", cover:coversPool[4], user:"Jon K", avatar:avatarsPool[1], likes:"3.2k" },
+                    { id:"n2", title:"Jetty Fishing Notes", desc:"Beginner gear + timing.", cover:coversPool[2], user:"Louis", avatar:avatarsPool[0], likes:"2.6k" },
+                    { id:"n3", title:"Know What It's Like", desc:"Plan less, experience more.", cover:coversPool[1], user:"James", avatar:avatarsPool[3], likes:"1.9k" },
+                    { id:"n4", title:"ML Engineer Roadmap", desc:"A realistic 12-week plan.", cover:coversPool[5], user:"Cassie", avatar:avatarsPool[2], likes:"4.1k" },
+                    { id:"n5", title:"Weekend Packing Hacks", desc:"Carry-on only checklist.", cover:coversPool[0], user:"Nina", avatar:avatarsPool[1], likes:"2.2k" },
+                    { id:"n6", title:"Budget Travel Meals", desc:"Eat well without overspending.", cover:coversPool[4], user:"Ari", avatar:avatarsPool[0], likes:"2.8k" },
+                    { id:"n7", title:"Photo Editing Basics", desc:"Quick edits that look natural.", cover:coversPool[3], user:"Mila", avatar:avatarsPool[2], likes:"3.1k" },
+                    { id:"n8", title:"Short City Walk Route", desc:"3 spots + 1 café stop.", cover:coversPool[2], user:"Kira", avatar:avatarsPool[3], likes:"2.5k" }
+                ],
+                travel: [
+                    { id:"t1", title:"Moscow One-day Plan", desc:"Core landmarks route.", cover:coversPool[0], user:"Kira", avatar:avatarsPool[0], likes:"7.2k" },
+                    { id:"t2", title:"Night Photo Route", desc:"Best angles at night.", cover:coversPool[1], user:"Lena", avatar:avatarsPool[1], likes:"5.8k" },
+                    { id:"t3", title:"Couple Weekend Route", desc:"48H slow travel plan.", cover:coversPool[2], user:"Mila", avatar:avatarsPool[2], likes:"6.1k" },
+                    { id:"t4", title:"Museum + Café Day", desc:"Indoor plan for cold days.", cover:coversPool[3], user:"James", avatar:avatarsPool[3], likes:"4.4k" },
+                    { id:"t5", title:"River Walk Spots", desc:"Sunset + walking path.", cover:coversPool[4], user:"Nina", avatar:avatarsPool[1], likes:"4.9k" },
+                    { id:"t6", title:"Street Market Guide", desc:"What to buy + when.", cover:coversPool[5], user:"Ari", avatar:avatarsPool[0], likes:"3.7k" },
+                    { id:"t7", title:"Transport Tips", desc:"Move fast, save money.", cover:coversPool[1], user:"Louis", avatar:avatarsPool[2], likes:"3.3k" },
+                    { id:"t8", title:"Photo Checklist", desc:"Light gear essentials.", cover:coversPool[0], user:"Cassie", avatar:avatarsPool[3], likes:"2.9k" }
+                ],
+                food: [
+                    { id:"f1", title:"Late-night Noodles", desc:"Order guide + spice levels.", cover:coversPool[4], user:"Ari", avatar:avatarsPool[0], likes:"10.3k" },
+                    { id:"f2", title:"Coffee Route", desc:"3 cafés + 1 bakery.", cover:coversPool[3], user:"Nina", avatar:avatarsPool[1], likes:"8.9k" },
+                    { id:"f3", title:"Street Snacks List", desc:"Top picks + combos.", cover:coversPool[2], user:"Jon", avatar:avatarsPool[2], likes:"7.6k" },
+                    { id:"f4", title:"Fast Food Smarter", desc:"Budget + healthier tricks.", cover:coversPool[4], user:"Mary", avatar:avatarsPool[3], likes:"6.7k" },
+                    { id:"f5", title:"Breakfast Near You", desc:"Quick & filling choices.", cover:coversPool[0], user:"Kira", avatar:avatarsPool[0], likes:"5.4k" },
+                    { id:"f6", title:"Dessert Guide", desc:"Sweet picks for photos.", cover:coversPool[5], user:"Lena", avatar:avatarsPool[1], likes:"6.2k" },
+                    { id:"f7", title:"Local Market Eats", desc:"What to try first.", cover:coversPool[1], user:"Louis", avatar:avatarsPool[2], likes:"4.8k" },
+                    { id:"f8", title:"Dinner Route", desc:"Walk + eat plan.", cover:coversPool[3], user:"Cassie", avatar:avatarsPool[3], likes:"4.1k" }
+                ]
+            };
+
+            // ✅ Ensure every tab has the same number of modules
+            const list = (data[topic] || data.popular).slice(0, CARD_COUNT);
+
+            const feed = document.getElementById('feed');
+            feed.innerHTML = list.map(item => {
+                const href = `details.html?id=${encodeURIComponent(item.id)}&topic=${encodeURIComponent(topic)}`;
+                return `
+                    <a class="xh-card" href="${href}">
+                        <div class="xh-box">
+                            <!-- Cover image: replace src anytime -->
+                            <img class="xh-img" src="${item.cover}" alt="${item.title}">
+                            <div class="xh-body">
+                                <h3 class="xh-h3">${item.title}</h3>
+                                <p class="xh-desc">${item.desc}</p>
+                                <div class="xh-meta">
+                                    <div class="xh-user">
+                                        <!-- Avatar image: replace src anytime -->
+                                        <img src="${item.avatar}" alt="${item.user}">
+                                        <span>${item.user}</span>
+                                    </div>
+                                    <div>❤️ ${item.likes}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        });
+    </script>
+</body>
+</html>

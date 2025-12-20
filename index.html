@@ -8,22 +8,28 @@
 </head>
 <body class="login-body">
     <div class="login-header">
-        <span>&lt; Back</span>
+        <!-- Back：点击返回 Travel.html -->
+        <span id="backBtn" style="cursor: pointer;">&lt; Back</span>
         <div>...</div>
     </div>
 
     <div class="login-container">
         <h1 class="login-title">Welcome to Travel Agent</h1>
 
-        <!-- 电话号码输入区域，添加下拉选择框 -->
+        <!-- 电话号码输入区域：国家号改为可输入，默认 +7 -->
         <div class="input-group">
-            <select id="countryCode" style="border: none; background: transparent; outline: none;">
-                <!-- 生成+1到+100的选项 -->
-                <option value="+86">+86</option>
-                <!-- 其他选项由JavaScript动态生成 -->
-            </select>
-            <input type="text" placeholder="Fill in your phone number" id="phoneInput">
+            <input
+                type="text"
+                id="countryCode"
+                value="+7"
+                inputmode="numeric"
+                style="border: none; background: transparent; outline: none; width: 60px;"
+            />
+            <input type="tel" inputmode="numeric" placeholder="Fill in your phone number" id="phoneInput">
         </div>
+
+        <!-- Phone error (red text) -->
+        <div id="phoneError" style="margin-top: 6px; font-size: 12px; color: #e53935; display: none;"></div>
 
         <!-- 密码输入框 - 修复无法输入问题 -->
         <div class="input-group" style="margin-top: 15px;">
@@ -35,11 +41,11 @@
         </p>
 
         <label style="font-size: 14px; display: flex; align-items: center; gap: 10px;">
-            <input type="checkbox"> Agree to the Terms of Agreement
+            <input type="checkbox" id="termsCheckbox"> Agree to the Terms of Agreement
         </label>
 
         <button class="login-btn" id="loginBtn">Verify and log in</button>
-        
+
         <!-- 注册按钮 -->
         <button class="register-btn" id="registerBtn" style="width: 100%; padding: 12px; margin-top: 10px; background: transparent; border: 1px solid #ccc; color: #666; border-radius: 5px; cursor: pointer;">
             Sign Up
@@ -48,46 +54,250 @@
         <div class="input-group" style="margin-top: 30px;">
             <span>Other</span>
             <div style="flex:1; text-align: center; font-weight: bold;">Password</div>
-            <span>WeChat / QQ</span> 
+            <span>WeChat / QQ</span>
         </div>
     </div>
 
     <script>
-        // 动态生成国家区号选项（+1 到 +100）
         document.addEventListener('DOMContentLoaded', function() {
-            const countryCodeSelect = document.getElementById('countryCode');
-            countryCodeSelect.innerHTML = ''; // 清空默认选项
-            
-            for (let i = 1; i <= 100; i++) {
-                const option = document.createElement('option');
-                option.value = `+${i}`;
-                option.textContent = `+${i}`;
-                if (i === 86) {
-                    option.selected = true; // 默认选中+86
+            const countryCodeInput = document.getElementById('countryCode');
+            const phoneInput = document.getElementById('phoneInput');
+            const phoneError = document.getElementById('phoneError');
+            const passwordInput = document.getElementById('passwordInput');
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const backBtn = document.getElementById('backBtn');
+
+            // 1) Back 按钮：返回 Travel.html
+            backBtn.addEventListener('click', function() {
+                window.location.href = 'Travel.html';
+            });
+
+            // --------- Error helper ----------
+            function setPhoneError(msg) {
+                if (msg) {
+                    phoneError.textContent = msg;
+                    phoneError.style.display = 'block';
+                } else {
+                    phoneError.textContent = '';
+                    phoneError.style.display = 'none';
                 }
-                countryCodeSelect.appendChild(option);
             }
-            
-            // 登录按钮点击事件
-            document.getElementById('loginBtn').addEventListener('click', function() {
-                const phoneNumber = document.getElementById('phoneInput').value;
-                const password = document.getElementById('passwordInput').value;
-                const countryCode = document.getElementById('countryCode').value;
-                
-                // 简单的验证
-                if (phoneNumber && password) {
+
+            // --------- E.164-style global validation ----------
+            // Country code: + + 1~3 digits, not starting with 0
+            // National number: 4~14 digits (covers global ranges)
+            // Total digits (country + national) must be <= 15
+            function getPhoneValidationResult(countryRaw, phoneDigits, hadNonDigit) {
+                const ccDigits = (countryRaw || '').replace(/\D/g, '');
+
+                // Do not show red text for completely empty fields
+                if (!ccDigits && !phoneDigits) return { ok: false, msg: '' };
+
+                if (hadNonDigit) {
+                    return { ok: false, msg: 'Please enter digits only.' };
+                }
+
+                if (!ccDigits) {
+                    return { ok: false, msg: 'Please enter a valid country code (e.g., +7).' };
+                }
+
+                if (ccDigits.length < 1 || ccDigits.length > 3 || ccDigits[0] === '0') {
+                    return { ok: false, msg: 'Please enter a valid country code (e.g., +7).' };
+                }
+
+                if (!phoneDigits) {
+                    // Keep it quiet until they start typing the phone number
+                    return { ok: false, msg: '' };
+                }
+
+                if (phoneDigits.length < 4) {
+                    return { ok: false, msg: 'Phone number is too short.' };
+                }
+
+                if (phoneDigits.length > 14) {
+                    return { ok: false, msg: 'Phone number is too long.' };
+                }
+
+                if ((ccDigits.length + phoneDigits.length) > 15) {
+                    return { ok: false, msg: 'The full number is too long (max 15 digits including country code).' };
+                }
+
+                return { ok: true, msg: '' };
+            }
+
+            function isPasswordValid(pw) {
+                return typeof pw === 'string' && pw.length >= 6;
+            }
+
+            // 3) Verify button color changes when phone + password are valid (AND terms agreed)
+            const defaultBtnStyles = {
+                backgroundColor: getComputedStyle(loginBtn).backgroundColor,
+                color: getComputedStyle(loginBtn).color,
+                borderColor: getComputedStyle(loginBtn).borderColor
+            };
+
+            function setVerifyBtnActive(active) {
+                if (active) {
+                    loginBtn.style.backgroundColor = '#000';
+                    loginBtn.style.color = '#fff';
+                    loginBtn.style.borderColor = '#000';
+                } else {
+                    loginBtn.style.backgroundColor = defaultBtnStyles.backgroundColor;
+                    loginBtn.style.color = defaultBtnStyles.color;
+                    loginBtn.style.borderColor = defaultBtnStyles.borderColor;
+                }
+            }
+
+            // --------- Local demo "register/login" storage ----------
+            function getUsers() {
+                try {
+                    return JSON.parse(localStorage.getItem('travelAgentUsers') || '{}');
+                } catch (e) {
+                    return {};
+                }
+            }
+
+            function saveUsers(users) {
+                localStorage.setItem('travelAgentUsers', JSON.stringify(users));
+            }
+
+            function getNormalizedCountryCode() {
+                const digits = (countryCodeInput.value || '').replace(/\D/g, '');
+                return digits ? ('+' + digits) : '';
+            }
+
+            function getUserKey() {
+                // key example: +71234567890
+                return `${getNormalizedCountryCode()}${phoneInput.value}`;
+            }
+
+            function updateVerifyBtnState(hadNonDigit) {
+                const phoneDigits = phoneInput.value;
+                const pw = passwordInput.value;
+
+                const result = getPhoneValidationResult(countryCodeInput.value, phoneDigits, hadNonDigit);
+                setPhoneError(result.msg);
+
+                const ok = result.ok && isPasswordValid(pw) && termsCheckbox.checked;
+                setVerifyBtnActive(ok);
+            }
+
+            // Country code input: keep it as "+<digits>"
+            countryCodeInput.addEventListener('input', function() {
+                const raw = countryCodeInput.value;
+                const digits = raw.replace(/\D/g, '');
+                const normalized = digits ? ('+' + digits) : '+';
+                const hadNonDigit = raw !== normalized;
+
+                countryCodeInput.value = normalized;
+
+                updateVerifyBtnState(hadNonDigit);
+            });
+
+            // Phone input: digits only
+            phoneInput.addEventListener('input', function() {
+                const raw = phoneInput.value;
+                const cleaned = raw.replace(/\D/g, '');
+                const hadNonDigit = raw !== cleaned;
+
+                if (hadNonDigit) phoneInput.value = cleaned;
+
+                updateVerifyBtnState(hadNonDigit);
+            });
+
+            passwordInput.addEventListener('input', function() {
+                updateVerifyBtnState(false);
+            });
+
+            termsCheckbox.addEventListener('change', function() {
+                updateVerifyBtnState(false);
+            });
+
+            // Verify and log in:
+            // - Must agree to terms
+            // - If registered: check password
+            // - If unregistered: auto register then log in (matches the text on the page)
+            loginBtn.addEventListener('click', function() {
+                if (!termsCheckbox.checked) {
+                    alert('Please agree to the Terms of Agreement before continuing.');
+                    return;
+                }
+
+                const phoneDigits = phoneInput.value;
+                const pw = passwordInput.value;
+
+                const result = getPhoneValidationResult(countryCodeInput.value, phoneDigits, false);
+                setPhoneError(result.msg);
+
+                if (!result.ok) {
+                    alert(result.msg || 'Please enter a valid phone number.');
+                    return;
+                }
+
+                if (!isPasswordValid(pw)) {
+                    alert('Password must be at least 6 characters.');
+                    return;
+                }
+
+                const users = getUsers();
+                const key = getUserKey();
+
+                if (users[key]) {
+                    if (users[key] !== pw) {
+                        alert('Incorrect password.');
+                        return;
+                    }
                     window.location.href = 'Travel.html';
                 } else {
-                    alert('Please fill in both phone number and password');
+                    users[key] = pw;
+                    saveUsers(users);
+                    window.location.href = 'Travel.html';
                 }
             });
-            
-            // 注册按钮点击事件
-            document.getElementById('registerBtn').addEventListener('click', function() {
-                // 这里可以跳转到注册页面
-                alert('Redirect to registration page');
-                // window.location.href = 'register.html';
+
+            // Sign Up: explicit registration (must agree to terms)
+            registerBtn.addEventListener('click', function() {
+                if (!termsCheckbox.checked) {
+                    alert('Please agree to the Terms of Agreement before continuing.');
+                    return;
+                }
+
+                const phoneDigits = phoneInput.value;
+                const pw = passwordInput.value;
+
+                const result = getPhoneValidationResult(countryCodeInput.value, phoneDigits, false);
+                setPhoneError(result.msg);
+
+                if (!result.ok) {
+                    alert(result.msg || 'Please enter a valid phone number.');
+                    return;
+                }
+
+                if (!isPasswordValid(pw)) {
+                    alert('Password must be at least 6 characters.');
+                    return;
+                }
+
+                const users = getUsers();
+                const key = getUserKey();
+
+                if (users[key]) {
+                    alert('This phone number is already registered.');
+                    return;
+                }
+
+                users[key] = pw;
+                saveUsers(users);
+
+                alert('Registration successful.');
+                window.location.href = 'Travel.html';
             });
+
+            // Initialize once
+            if (!countryCodeInput.value) countryCodeInput.value = '+7';
+            updateVerifyBtnState(false);
         });
     </script>
 </body>

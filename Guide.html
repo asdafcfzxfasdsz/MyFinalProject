@@ -5,6 +5,27 @@
     <title>Guide Map</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
+        /* ===== Same as Travel: active nav pop effect + clickable user ===== */
+        .nav-links a.active{
+            display: inline-block;
+            transform: translateY(-6px) scale(1.15);
+            font-weight: 700;
+            animation: navPop 450ms ease-out;
+            transition: transform 220ms ease, font-weight 220ms ease;
+        }
+        @keyframes navPop{
+            0%{ transform: translateY(0) scale(1); }
+            60%{ transform: translateY(-12px) scale(1.25); }
+            100%{ transform: translateY(-6px) scale(1.15); }
+        }
+        .user-avatar{
+            cursor: pointer;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         /* 地图容器样式 */
         .map-container {
             width: 100%;
@@ -15,13 +36,9 @@
             position: relative;
             border: 1px solid #ddd;
         }
-        
-        /* 地图样式 */
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-        
+
+        #map { width: 100%; height: 100%; }
+
         /* 位置信息面板样式 */
         .location-panel {
             position: absolute;
@@ -32,27 +49,27 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
-            min-width: 200px;
+            min-width: 220px;
         }
-        
+
         .location-title {
             font-weight: bold;
             font-size: 16px;
             margin-bottom: 8px;
             color: #333;
         }
-        
+
         .location-address {
             font-size: 14px;
             color: #666;
             margin-bottom: 5px;
         }
-        
+
         .location-coordinates {
             font-size: 12px;
             color: #999;
         }
-        
+
         /* 地图控制按钮样式 */
         .map-controls {
             position: absolute;
@@ -63,7 +80,7 @@
             gap: 10px;
             z-index: 1000;
         }
-        
+
         .map-btn {
             width: 40px;
             height: 40px;
@@ -76,6 +93,64 @@
             justify-content: center;
             cursor: pointer;
             font-size: 18px;
+        }
+
+        /* ===== Route planner (destination can come from the search input above) ===== */
+        .route-panel{
+            margin-top: 14px;
+            background: white;
+            padding: 14px 14px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .route-row{
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .route-row input{
+            flex: 1;
+            min-width: 220px;
+            border: 1px solid rgba(0,0,0,0.12);
+            border-radius: 12px;
+            padding: 10px 12px;
+            outline: none;
+            font-size: 14px;
+        }
+        .route-row button{
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 800;
+            background: #111;
+            color: #fff;
+            min-width: 110px;
+        }
+        .route-status{
+            margin-top: 10px;
+            font-size: 13px;
+            color: rgba(0,0,0,0.7);
+        }
+        .route-steps{
+            margin-top: 10px;
+            padding-left: 18px;
+            font-size: 13px;
+            color: rgba(0,0,0,0.75);
+            line-height: 1.45;
+        }
+
+        /* Search bar small controls */
+        .place-mode{
+            border: none;
+            outline: none;
+            background: #f0f0f0;
+            padding: 8px 10px;
+            border-radius: 999px;
+            font-size: 14px;
+            margin-right: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -94,13 +169,12 @@
                 <span>🔍</span>
                 <input type="text" placeholder="Search anything">
             </div>
-            <div class="user-avatar">User</div>
+            <div class="user-avatar" id="userAvatar" title="Click to go to Login">User</div>
             <span>🏷️</span>
         </div>
     </nav>
 
-    <!-- 顶部三张图片，保持原有布局 -->
-   <section class="hero-section">
+    <section class="hero-section">
         <a href="#" class="hero-card">
             <img src="image\1.png" alt="Moscow">
             <div class="hero-text">
@@ -125,18 +199,15 @@
     </section>
 
     <div style="max-width: 1200px; margin: 20px auto; padding: 0 20px;">
-        <!-- 地图容器 -->
         <div class="map-container">
             <div id="map"></div>
-            
-            <!-- 位置信息面板 -->
+
             <div class="location-panel">
-                <div class="location-title">当前位置</div>
-                <div class="location-address">北京市朝阳区建国门外大街1号</div>
-                <div class="location-coordinates">39.9042° N, 116.4074° E</div>
+                <div class="location-title">Current location</div>
+                <div class="location-address" id="locationAddress">Beijing (default)</div>
+                <div class="location-coordinates" id="locationCoords">39.9042° N, 116.4074° E</div>
             </div>
-            
-            <!-- 地图控制按钮 -->
+
             <div class="map-controls">
                 <button class="map-btn" onclick="zoomIn()">+</button>
                 <button class="map-btn" onclick="zoomOut()">-</button>
@@ -144,83 +215,247 @@
             </div>
         </div>
 
-        <!-- 搜索框 -->
+        <!-- Search input: can set CURRENT location or DESTINATION (no extra destination typing needed) -->
         <div class="guide-search-container" style="margin-top: 30px; display: flex; align-items: center; background: white; padding: 10px 15px; border-radius: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <span style="font-size: 24px; margin-right: 10px; color: #4CAF50;">+</span>
-            <input type="text" placeholder="Where You Want To Go" style="border: none; outline: none; flex: 1; font-size: 16px;">
-            <span style="font-size: 20px; background: #f0f0f0; padding: 8px; border-radius: 50%; cursor: pointer;">🔍</span>
+
+            <!-- choose how to use the typed place -->
+            <select class="place-mode" id="placeModeSelect" title="Use this place as">
+                <option value="destination" selected>Destination</option>
+                <option value="current">Current</option>
+            </select>
+
+            <input
+                id="placeSearchInput"
+                type="text"
+                placeholder="Type a place and press Enter"
+                style="border: none; outline: none; flex: 1; font-size: 16px;"
+            >
+            <button id="placeSearchBtn" title="Search" style="border:none;background:transparent;cursor:pointer;">
+                <span style="font-size: 20px; background: #f0f0f0; padding: 8px; border-radius: 50%; cursor: pointer;">🔍</span>
+            </button>
+        </div>
+
+        <!-- Route planner: destination comes from the search above (auto-filled) -->
+        <div class="route-panel">
+            <div class="route-row">
+                <input id="fromInput" type="text" placeholder="Current location (optional)">
+                <!-- Destination is auto-filled from the search input above -->
+                <input id="destDisplay" type="text" placeholder="Destination (use the search above)" readonly>
+                <button id="routeBtn">Route</button>
+            </div>
+
+            <div class="route-status" id="routeStatus">
+                Tip: Search a place as "Destination", then press Route.
+            </div>
+            <ol class="route-steps" id="routeSteps"></ol>
         </div>
     </div>
 
     <script>
-        // 初始化地图（使用Leaflet.js作为示例）
+        // ===== Map globals =====
+        window.map = null;
+        window.marker = null;      // current location marker
+        window.destMarker = null;  // destination marker
+        window.routeLine = null;   // route polyline
+        window.currentLatLng = { lat: 39.9042, lng: 116.4074 }; // Beijing default
+
+        // Destination cache (set by search)
+        window.destination = null; // {lat,lng,display}
+
+        // ===== Geocoding (Nominatim) =====
+        async function geocodePlace(query){
+            const url =
+                'https://nominatim.openstreetmap.org/search' +
+                '?format=json&limit=1&accept-language=en&q=' + encodeURIComponent(query);
+
+            const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+            if (!res.ok) throw new Error('geocode_failed');
+
+            const data = await res.json();
+            if (!data || !data[0]) throw new Error('no_result');
+
+            return {
+                lat: parseFloat(data[0].lat),
+                lng: parseFloat(data[0].lon),
+                display: data[0].display_name || query
+            };
+        }
+
+        async function reverseGeocode(lat, lng){
+            const url =
+                'https://nominatim.openstreetmap.org/reverse' +
+                '?format=json&accept-language=en&lat=' + encodeURIComponent(lat) +
+                '&lon=' + encodeURIComponent(lng);
+
+            const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+            if (!res.ok) throw new Error('reverse_failed');
+
+            const data = await res.json();
+            return data && data.display_name ? data.display_name : '';
+        }
+
+        function updateLocationPanel(addressText, lat, lng){
+            document.getElementById('locationAddress').textContent = addressText || 'Feature under development.';
+            document.getElementById('locationCoords').textContent = `${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E`;
+        }
+
+        function setCurrentLocation(lat, lng, addressText){
+            window.currentLatLng = { lat, lng };
+            if (window.map && window.marker){
+                window.map.setView([lat, lng], 14);
+                window.marker.setLatLng([lat, lng]);
+            }
+            updateLocationPanel(addressText || 'Loading address...', lat, lng);
+        }
+
+        function setDestination(lat, lng, displayText){
+            window.destination = { lat, lng, display: displayText || 'Destination' };
+
+            // Show destination in the route box (no extra input needed)
+            const destDisplay = document.getElementById('destDisplay');
+            destDisplay.value = window.destination.display;
+
+            if (window.map){
+                // Place / move destination marker
+                if (!window.destMarker){
+                    window.destMarker = L.marker([lat, lng]);
+                }
+                try{
+                    window.destMarker.setLatLng([lat, lng]).addTo(window.map);
+                    window.destMarker.bindPopup('Destination').openPopup();
+                }catch(e){}
+                // Follow the map to destination (your requirement: map follows jump)
+                try{ window.map.setView([lat, lng], 14); }catch(e){}
+            }
+        }
+
+        // ===== Routing (OSRM) =====
+        async function fetchRoute(fromLat, fromLng, toLat, toLng){
+            const url =
+                'https://router.project-osrm.org/route/v1/driving/' +
+                encodeURIComponent(fromLng) + ',' + encodeURIComponent(fromLat) + ';' +
+                encodeURIComponent(toLng) + ',' + encodeURIComponent(toLat) +
+                '?overview=full&geometries=geojson&steps=true';
+
+            const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+            if (!res.ok) throw new Error('route_failed');
+
+            const data = await res.json();
+            if (!data || !data.routes || !data.routes[0]) throw new Error('no_route');
+
+            return data.routes[0];
+        }
+
+        function renderRouteOnMap(route){
+            if (!window.map) return;
+
+            if (window.routeLine){
+                try{ window.map.removeLayer(window.routeLine); }catch(e){}
+                window.routeLine = null;
+            }
+
+            const geo = route.geometry;
+            if (!geo || !geo.coordinates) return;
+
+            const latlngs = geo.coordinates.map(c => [c[1], c[0]]);
+            window.routeLine = L.polyline(latlngs, { weight: 5, opacity: 0.8 }).addTo(window.map);
+
+            try{
+                window.map.fitBounds(window.routeLine.getBounds(), { padding: [30, 30] });
+            }catch(e){}
+        }
+
+        function formatKm(meters){
+            return (meters / 1000).toFixed(meters >= 10000 ? 0 : 1) + ' km';
+        }
+        function formatMin(seconds){
+            return Math.round(seconds / 60) + ' min';
+        }
+
+        function stepToText(step){
+            const type = step?.maneuver?.type || 'continue';
+            const mod = step?.maneuver?.modifier ? (' ' + step.maneuver.modifier) : '';
+            const name = step?.name ? (' onto ' + step.name) : '';
+            const dist = typeof step?.distance === 'number' ? (' (' + formatKm(step.distance) + ')') : '';
+            return (type + mod + name + dist).replace(/\s+/g, ' ').trim();
+        }
+
+        // ===== Leaflet init =====
         function initMap() {
-            // 创建地图实例
-            const map = L.map('map').setView([39.9042, 116.4074], 13);
-            
-            // 添加地图图层（使用OpenStreetMap作为示例）
+            const map = L.map('map').setView([window.currentLatLng.lat, window.currentLatLng.lng], 13);
+
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
-            
-            // 添加当前位置标记
-            const marker = L.marker([39.9042, 116.4074]).addTo(map)
-                .bindPopup('当前位置<br>北京市朝阳区建国门外大街1号')
+
+            const marker = L.marker([window.currentLatLng.lat, window.currentLatLng.lng]).addTo(map)
+                .bindPopup('Current location')
                 .openPopup();
-            
-            // 保存地图实例供其他函数使用
+
             window.map = map;
             window.marker = marker;
+
+            updateLocationPanel('Beijing (default)', window.currentLatLng.lat, window.currentLatLng.lng);
         }
-        
-        // 地图放大
-        function zoomIn() {
-            if (window.map) {
-                window.map.zoomIn();
+
+        // Map controls
+        function zoomIn() { if (window.map) window.map.zoomIn(); }
+        function zoomOut() { if (window.map) window.map.zoomOut(); }
+
+        async function locateMe() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                return;
             }
+
+            navigator.geolocation.getCurrentPosition(async function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                setCurrentLocation(lat, lng, 'Loading address...');
+
+                try{
+                    const addr = await reverseGeocode(lat, lng);
+                    updateLocationPanel(addr || 'Current location', lat, lng);
+                }catch(e){
+                    updateLocationPanel('Current location', lat, lng);
+                }
+            }, function(error) {
+                alert('Unable to get your location: ' + error.message);
+            });
         }
-        
-        // 地图缩小
-        function zoomOut() {
-            if (window.map) {
-                window.map.zoomOut();
-            }
-        }
-        
-        // 定位到我的位置
-        function locateMe() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    
-                    if (window.map && window.marker) {
-                        window.map.setView([lat, lng], 15);
-                        window.marker.setLatLng([lat, lng]);
-                        
-                        // 更新位置信息面板
-                        document.querySelector('.location-address').textContent = '正在获取详细地址...';
-                        document.querySelector('.location-coordinates').textContent = `${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E`;
-                        
-                        // 这里可以添加反向地理编码API调用获取详细地址
-                    }
-                }, function(error) {
-                    alert('无法获取您的位置信息：' + error.message);
-                });
-            } else {
-                alert('您的浏览器不支持地理位置服务');
-            }
-        }
-        
-        // 页面加载完成后初始化地图
+
         document.addEventListener('DOMContentLoaded', function() {
-            // 添加Leaflet.js CSS和JS（如果尚未加载）
+            // User avatar same as Travel
+            const userAvatar = document.getElementById('userAvatar');
+            function getCurrentUserPhone(){
+                const candidates = [
+                    localStorage.getItem('travelAgentCurrentUser'),
+                    localStorage.getItem('travelAgentCurrentPhone'),
+                    localStorage.getItem('currentUserPhone'),
+                    localStorage.getItem('travelAgentLastUser')
+                ].filter(Boolean);
+                if (candidates.length > 0) return candidates[0];
+
+                try{
+                    const users = JSON.parse(localStorage.getItem('travelAgentUsers') || '{}');
+                    const keys = Object.keys(users);
+                    if (keys.length === 1) return keys[0];
+                }catch(e){}
+                return '';
+            }
+            const phone = getCurrentUserPhone();
+            userAvatar.textContent = phone ? phone : 'User';
+            userAvatar.addEventListener('click', function(){ window.location.href = 'index.html'; });
+
+            // Load Leaflet
             if (!document.querySelector('link[href*="leaflet"]')) {
                 const leafletCSS = document.createElement('link');
                 leafletCSS.rel = 'stylesheet';
                 leafletCSS.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
                 document.head.appendChild(leafletCSS);
-                
+
                 const leafletJS = document.createElement('script');
                 leafletJS.src = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js';
                 leafletJS.onload = initMap;
@@ -228,6 +463,102 @@
             } else {
                 initMap();
             }
+
+            // Search input behavior
+            const placeModeSelect = document.getElementById('placeModeSelect');
+            const placeSearchInput = document.getElementById('placeSearchInput');
+            const placeSearchBtn = document.getElementById('placeSearchBtn');
+            const destDisplay = document.getElementById('destDisplay');
+
+            async function handlePlaceSearch(){
+                const q = (placeSearchInput.value || '').trim();
+                if (!q) return;
+
+                try{
+                    const r = await geocodePlace(q);
+
+                    // If user chooses "Destination", set destination and follow map
+                    if (placeModeSelect.value === 'destination'){
+                        setDestination(r.lat, r.lng, r.display);
+                    } else {
+                        // Otherwise set current location
+                        setCurrentLocation(r.lat, r.lng, r.display);
+                    }
+                }catch(e){
+                    alert('Feature under development.');
+                }
+            }
+
+            placeSearchBtn.addEventListener('click', handlePlaceSearch);
+            placeSearchInput.addEventListener('keydown', function(e){
+                if (e.key === 'Enter'){
+                    e.preventDefault();
+                    handlePlaceSearch();
+                }
+            });
+
+            // Route planning
+            const fromInput = document.getElementById('fromInput');
+            const routeBtn = document.getElementById('routeBtn');
+            const routeStatus = document.getElementById('routeStatus');
+            const routeSteps = document.getElementById('routeSteps');
+
+            async function handleRoute(){
+                // Destination priority:
+                // 1) If a destination was set by search, use it (no extra typing).
+                // 2) Else if the search box has text, geocode it as destination automatically.
+                let dest = window.destination;
+
+                routeSteps.innerHTML = '';
+
+                try{
+                    if (!dest){
+                        const q = (placeSearchInput.value || '').trim();
+                        if (!q){
+                            routeStatus.textContent = 'Please search a destination first.';
+                            return;
+                        }
+                        // Use the typed place as destination directly (no extra input)
+                        const r = await geocodePlace(q);
+                        setDestination(r.lat, r.lng, r.display);
+                        dest = window.destination;
+                    }
+
+                    // From: if provided, geocode; else use current marker
+                    let fromLat = window.currentLatLng.lat;
+                    let fromLng = window.currentLatLng.lng;
+                    let fromLabel = 'Current marker';
+
+                    const fromText = (fromInput.value || '').trim();
+                    if (fromText){
+                        const gFrom = await geocodePlace(fromText);
+                        fromLat = gFrom.lat;
+                        fromLng = gFrom.lng;
+                        fromLabel = gFrom.display;
+
+                        // Move current marker to this "from"
+                        setCurrentLocation(fromLat, fromLng, fromLabel);
+                    }
+
+                    routeStatus.textContent = 'Planning route...';
+
+                    const route = await fetchRoute(fromLat, fromLng, dest.lat, dest.lng);
+                    renderRouteOnMap(route);
+
+                    routeStatus.textContent =
+                        `From: ${fromLabel} → To: ${dest.display} · Distance: ${formatKm(route.distance)} · Time: ${formatMin(route.duration)}`;
+
+                    const steps = route?.legs?.[0]?.steps || [];
+                    const show = steps.slice(0, 8).map(stepToText).filter(Boolean);
+
+                    routeSteps.innerHTML = show.map(t => `<li>${t}</li>`).join('');
+                }catch(e){
+                    routeStatus.textContent = 'Feature under development.';
+                    routeSteps.innerHTML = '';
+                }
+            }
+
+            routeBtn.addEventListener('click', handleRoute);
         });
     </script>
 </body>

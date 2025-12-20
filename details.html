@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Details - Travel Agent</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .nav-links a.active{
+            display: inline-block;
+            transform: translateY(-6px) scale(1.15);
+            font-weight: 700;
+            animation: navPop 450ms ease-out;
+            transition: transform 220ms ease, font-weight 220ms ease;
+        }
+        @keyframes navPop{
+            0%{ transform: translateY(0) scale(1); }
+            60%{ transform: translateY(-12px) scale(1.25); }
+            100%{ transform: translateY(-6px) scale(1.15); }
+        }
+        .user-avatar{
+            cursor: pointer;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .dt-wrap{
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 18px 14px 40px;
+        }
+        .dt-top{
+            display:flex;
+            align-items:center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .dt-back{
+            text-decoration:none;
+            color: inherit;
+            font-weight: 700;
+            cursor:pointer;
+        }
+
+        .dt-card{
+            background: #fff;
+            border-radius: 16px;
+            overflow:hidden;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.07);
+        }
+        .dt-cover{
+            width: 100%;
+            display:block;
+            max-height: 520px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .dt-body{
+            padding: 14px 14px 18px;
+        }
+        .dt-title{
+            margin: 0 0 10px;
+            font-size: 20px;
+            line-height: 1.2;
+            font-weight: 900;
+        }
+        .dt-author{
+            display:flex;
+            align-items:center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .dt-user{
+            display:flex;
+            align-items:center;
+            gap: 10px;
+            min-width: 0;
+        }
+        .dt-user img{
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .dt-user strong{
+            display:block;
+            line-height: 1.1;
+        }
+        .dt-user span{
+            display:block;
+            font-size: 12px;
+            color: rgba(0,0,0,0.55);
+        }
+        .dt-actions{
+            display:flex;
+            align-items:center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .dt-actions a{
+            text-decoration:none;
+            color: inherit;
+            cursor:pointer;
+        }
+
+        .dt-text{
+            font-size: 14px;
+            line-height: 1.55;
+            color: rgba(0,0,0,0.78);
+            margin: 0 0 14px;
+        }
+
+        .dt-tags{
+            display:flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .dt-tag{
+            display:inline-flex;
+            align-items:center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,0,0,0.12);
+            text-decoration:none;
+            color: inherit;
+            cursor:pointer;
+            background: rgba(0,0,0,0.02);
+            font-size: 12px;
+        }
+
+        .dt-more{
+            margin-top: 16px;
+        }
+        .dt-more h3{
+            margin: 0 0 10px;
+            font-size: 14px;
+            font-weight: 900;
+        }
+        .dt-more-grid{
+            display:grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 720px){
+            .dt-more-grid{ grid-template-columns: 1fr; }
+        }
+        .dt-mini{
+            border-radius: 14px;
+            overflow:hidden;
+            background: #fff;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            text-decoration:none;
+            color: inherit;
+            cursor:pointer;
+        }
+        .dt-mini img{
+            width:100%;
+            display:block;
+            aspect-ratio: 16/10;
+            object-fit: cover;
+        }
+        .dt-mini div{
+            padding: 10px 10px 12px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="Travel.html" class="active">Travel</a></li>
+            <li><a href="AI Chat.html">AI Chat</a></li>
+            <li><a href="Food.html">Food</a></li>
+            <li><a href="Guide.html">Guide</a></li>
+            <li><a href="Ticket.html">Ticket</a></li>
+            <li><a href="Upload.html">Upload</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search anything">
+            </div>
+            <div class="user-avatar" id="userAvatar" title="Click to go to Login">User</div>
+            <span>🏷️</span>
+        </div>
+    </nav>
+
+    <div class="dt-wrap">
+        <div class="dt-top">
+            <a class="dt-back" id="backToMiddle" href="middle.html?topic=popular">&lt; Back</a>
+        </div>
+
+        <div class="dt-card">
+            <a id="coverLink" href="#">
+                <!-- Cover (replace src anytime) -->
+                <img class="dt-cover" id="coverImg" src="image\1.png" alt="cover">
+            </a>
+
+            <div class="dt-body">
+                <h1 class="dt-title" id="postTitle">Post Title</h1>
+
+                <div class="dt-author">
+                    <div class="dt-user">
+                        <!-- Avatar (replace src anytime) -->
+                        <img id="authorAvatar" src="image\3.png" alt="author">
+                        <div>
+                            <strong id="authorName">Author</strong>
+                            <span id="authorSub">Updated today · 3 min read</span>
+                        </div>
+                    </div>
+                    <div class="dt-actions">
+                        <a href="middle.html?topic=popular" id="saveBtn">⭐ Save</a>
+                        <a href="middle.html?topic=popular" id="shareBtn">🔗 Share</a>
+                    </div>
+                </div>
+
+                <p class="dt-text" id="postText"></p>
+                <div class="dt-tags" id="tagRow"></div>
+
+                <div class="dt-more">
+                    <h3>More like this</h3>
+                    <div class="dt-more-grid" id="moreGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const userAvatar = document.getElementById('userAvatar');
+
+            function getCurrentUserPhone(){
+                const candidates = [
+                    localStorage.getItem('travelAgentCurrentUser'),
+                    localStorage.getItem('travelAgentCurrentPhone'),
+                    localStorage.getItem('currentUserPhone'),
+                    localStorage.getItem('travelAgentLastUser')
+                ].filter(Boolean);
+                if (candidates.length > 0) return candidates[0];
+
+                try{
+                    const users = JSON.parse(localStorage.getItem('travelAgentUsers') || '{}');
+                    const keys = Object.keys(users);
+                    if (keys.length === 1) return keys[0];
+                }catch(e){}
+
+                return '';
+            }
+
+            const phone = getCurrentUserPhone();
+            userAvatar.textContent = phone ? phone : 'User';
+            userAvatar.addEventListener('click', function(){ window.location.href = 'index.html'; });
+
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id') || 'p1';
+            const topic = (params.get('topic') || 'popular').toLowerCase();
+
+            document.getElementById('backToMiddle').href = `middle.html?topic=${encodeURIComponent(topic)}`;
+
+            /**
+             * ✅ IMPORTANT (easy image replacement):
+             * - All covers/avatars use your common format: image\X.png
+             * - Replace images by changing "cover"/"avatar" below
+             */
+            const posts = {
+                // Popular
+                p1: { title:"Red Square Photo Walk", cover:"image\\1.png", author:"Kira", avatar:"image\\3.png",
+                      text:"Route idea: Start 1 hour before sunset. Walk around the landmark area, then stop by a warm café. Keep the route light and flexible.",
+                      tags:["#Moscow","#CityWalk","#PhotoSpots","#OneDayPlan"] },
+                p2: { title:"Moscow Night View Spots", cover:"image\\2.png", author:"Lena", avatar:"image\\5.png",
+                      text:"Night route: riverfront → bridge viewpoint → street lights → late snack. Bring warm layers and keep to well-lit paths.",
+                      tags:["#NightView","#TravelTips","#Photography","#WalkRoute"] },
+                p3: { title:"Couple Trip: 48H Plan", cover:"image\\3.png", author:"Mila", avatar:"image\\2.png",
+                      text:"Day 1: landmarks + dinner. Day 2: slow cafés + market + sunset stroll. Choose 3 main spots per day and leave time for surprises.",
+                      tags:["#CoupleTrip","#Weekend","#Itinerary","#CityGuide"] },
+                p4: { title:"Boating Season Checklist", cover:"image\\2.png", author:"James", avatar:"image\\4.png",
+                      text:"Checklist: life jacket, dry bag, sunscreen, water, snacks, weather check. Pick calm water if you're new and keep a short route.",
+                      tags:["#Seattle","#Boating","#Checklist","#Outdoor"] },
+
+                // New
+                n1: { title:"Mobile UX Trends", cover:"image\\5.png", author:"Jon K", avatar:"image\\5.png",
+                      text:"Focus on readability, spacing, consistent motion, and accessibility. Bigger tap targets and clearer hierarchy go a long way.",
+                      tags:["#UX","#Design","#Mobile","#Trends"] },
+                n2: { title:"Jetty Fishing Notes", cover:"image\\3.png", author:"Louis", avatar:"image\\3.png",
+                      text:"Bring simple gear, check tides, watch your footing. Start with short sessions and learn the rhythm.",
+                      tags:["#Fishing","#Coast","#Beginner","#Outdoor"] },
+
+                // Travel
+                t1: { title:"Moscow One-day Plan", cover:"image\\1.png", author:"Kira", avatar:"image\\3.png",
+                      text:"A simple one-day route: landmark → museum → café → sunset viewpoint. Keep walking segments short and rest between spots.",
+                      tags:["#Travel","#Plan","#City","#Walk"] },
+
+                // Food
+                f1: { title:"Late-night Noodles", cover:"image\\5.png", author:"Ari", avatar:"image\\3.png",
+                      text:"Choose broth first, adjust spice, add-ons: egg + greens. If unsure, start mild and increase later.",
+                      tags:["#Food","#Noodles","#Night","#Guide"] }
+            };
+
+            // Fallback if id not found
+            const post = posts[id] || posts.p1;
+
+            document.getElementById('postTitle').textContent = post.title;
+
+            // Cover + avatar (local format)
+            document.getElementById('coverImg').src = post.cover;   // Replace cover src anytime
+            document.getElementById('coverImg').alt = post.title;
+
+            document.getElementById('authorName').textContent = post.author;
+            document.getElementById('authorAvatar').src = post.avatar; // Replace avatar src anytime
+            document.getElementById('authorAvatar').alt = post.author;
+
+            document.getElementById('postText').textContent = post.text;
+
+            // Keep cover clickable (stays in details)
+            document.getElementById('coverLink').href =
+                `details.html?id=${encodeURIComponent(id)}&topic=${encodeURIComponent(topic)}`;
+
+            // Tags -> middle page (clickable)
+            const tagRow = document.getElementById('tagRow');
+            tagRow.innerHTML = (post.tags || []).map(t => {
+                return `<a class="dt-tag" href="middle.html?topic=${encodeURIComponent(topic)}">${t}</a>`;
+            }).join('');
+
+            // More like this (still points to details)
+            const ids = Object.keys(posts).filter(k => k !== id);
+            const pick = ids.slice(0, 4);
+
+            const moreGrid = document.getElementById('moreGrid');
+            moreGrid.innerHTML = pick.map(k => {
+                const p = posts[k];
+                return `
+                    <a class="dt-mini" href="details.html?id=${encodeURIComponent(k)}&topic=${encodeURIComponent(topic)}">
+                        <!-- Mini cover (replace src anytime) -->
+                        <img src="${p.cover}" alt="${p.title}">
+                        <div>${p.title}</div>
+                    </a>
+                `;
+            }).join('');
+        });
+    </script>
+</body>
+</html>

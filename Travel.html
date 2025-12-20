@@ -5,6 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Homepage</title>
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Only for requested effects (active nav + clickable user phone display) -->
+    <style>
+        .nav-links a.active{
+            display: inline-block;
+            transform: translateY(-6px) scale(1.15);
+            font-weight: 700;
+            animation: navPop 450ms ease-out;
+            transition: transform 220ms ease, font-weight 220ms ease;
+        }
+        @keyframes navPop{
+            0%{ transform: translateY(0) scale(1); }
+            60%{ transform: translateY(-12px) scale(1.25); }
+            100%{ transform: translateY(-6px) scale(1.15); }
+        }
+        .user-avatar{
+            cursor: pointer;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .section-title a.section-link{
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .section-title a.section-link:hover{
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
@@ -22,27 +53,29 @@
                 <span>🔍</span>
                 <input type="text" placeholder="Search anything">
             </div>
-            <div class="user-avatar">User</div>
+            <!-- Clickable user icon + phone -->
+            <div class="user-avatar" id="userAvatar" title="Click to go to Login">User</div>
             <span>🏷️</span>
         </div>
     </nav>
 
     <section class="hero-section">
-        <a href="#" class="hero-card">
+        <!-- Hero cards -> details -->
+        <a href="details.html?id=moscow-red-square&topic=travel" class="hero-card">
             <img src="image\1.png" alt="Moscow">
             <div class="hero-text">
                 <h3>Red Square In Moscow</h3>
                 <p>Ah, The Joy Of The Open Road...</p>
             </div>
         </a>
-        <a href="#" class="hero-card">
+        <a href="details.html?id=moscow-night-view&topic=travel" class="hero-card">
             <img src="image\2.png" alt="Night View">
             <div class="hero-text">
                 <h3>My Travel To Moscow</h3>
                 <p>Download Torrents From Verified...</p>
             </div>
         </a>
-        <a href="#" class="hero-card">
+        <a href="details.html?id=moscow-couple-trip&topic=travel" class="hero-card">
             <img src="image\3.png" alt="Couple">
             <div class="hero-text">
                 <h3>We Are In Moscow</h3>
@@ -52,10 +85,14 @@
     </section>
 
     <div class="content-container">
-        <h2 class="section-title">Popular Posts</h2>
-        
+        <!-- Big title -> middle page -->
+        <h2 class="section-title">
+            <a class="section-link" href="middle.html?topic=popular">Popular Posts</a>
+        </h2>
+
         <div class="card-grid">
-            <a href="#" class="post-card">
+            <!-- Small title/image -> details -->
+            <a href="details.html?id=boating-seattle&topic=popular" class="post-card">
                 <img src="image\2.png" alt="Boat">
                 <div class="post-info">
                     <div class="post-title">Opening Day Of Boating Season, Seattle WA</div>
@@ -69,7 +106,7 @@
                 </div>
             </a>
 
-            <a href="#" class="post-card">
+            <a href="details.html?id=laptop-programming&topic=popular" class="post-card">
                 <img src="image\4.png" alt="Laptop">
                 <div class="post-info">
                     <div class="post-title">How To Choose The Right Laptop For Programming</div>
@@ -83,7 +120,7 @@
                 </div>
             </a>
 
-            <a href="#" class="post-card">
+            <a href="details.html?id=self-driving-story&topic=popular" class="post-card">
                 <img src="image\6.png" alt="Car">
                 <div class="post-info">
                     <div class="post-title">How We Built The First Real Self-Driving Car</div>
@@ -97,8 +134,8 @@
                 </div>
             </a>
 
-            <a href="#" class="post-card">
-                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80" alt="Food">
+            <a href="details.html?id=fast-food-story&topic=popular" class="post-card">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80" alt="Food">
                 <div class="post-info">
                     <div class="post-title">How To Persuade Your Parents To Buy Fast Food</div>
                     <div class="post-meta">
@@ -114,10 +151,14 @@
     </div>
 
     <div class="content-container">
-        <h2 class="section-title">New Posts</h2>
+        <!-- Big title -> middle page -->
+        <h2 class="section-title">
+            <a class="section-link" href="middle.html?topic=new">New Posts</a>
+        </h2>
+
         <div class="card-grid">
-            <a href="#" class="post-card">
-                <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=400&q=80" alt="Hiking">
+            <a href="details.html?id=ux-trends&topic=new" class="post-card">
+                <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=800&q=80" alt="Hiking">
                 <div class="post-info">
                     <div class="post-title">12 Mobile UX Design Trends For 2018</div>
                     <div class="post-meta">
@@ -125,8 +166,9 @@
                     </div>
                 </div>
             </a>
-            <a href="#" class="post-card">
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Surf">
+
+            <a href="details.html?id=jetty-fishing&topic=new" class="post-card">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Surf">
                 <div class="post-info">
                     <div class="post-title">No Boat Bottomfish: Jetty Fishing On The Coast</div>
                     <div class="post-meta">
@@ -134,8 +176,9 @@
                     </div>
                 </div>
             </a>
-            <a href="#" class="post-card">
-                <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=400&q=80" alt="Travel">
+
+            <a href="details.html?id=why-it-helps&topic=new" class="post-card">
+                <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=80" alt="Travel">
                 <div class="post-info">
                     <div class="post-title">Why It Helps To Know What It's Like</div>
                     <div class="post-meta">
@@ -143,8 +186,9 @@
                     </div>
                 </div>
             </a>
-            <a href="#" class="post-card">
-                <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=400&q=80" alt="Car">
+
+            <a href="details.html?id=ml-self-driving-career&topic=new" class="post-card">
+                <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=800&q=80" alt="Car">
                 <div class="post-info">
                     <div class="post-title">Becoming A Self-Driving Car & Machine Learning Engineer</div>
                     <div class="post-meta">
@@ -154,5 +198,40 @@
             </a>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const userAvatar = document.getElementById('userAvatar');
+
+            // Try to read the logged-in phone from storage (supports multiple possible keys)
+            function getCurrentUserPhone(){
+                const candidates = [
+                    localStorage.getItem('travelAgentCurrentUser'),
+                    localStorage.getItem('travelAgentCurrentPhone'),
+                    localStorage.getItem('currentUserPhone'),
+                    localStorage.getItem('travelAgentLastUser')
+                ].filter(Boolean);
+
+                if (candidates.length > 0) return candidates[0];
+
+                // Fallback: if only one registered account exists, show it
+                try{
+                    const users = JSON.parse(localStorage.getItem('travelAgentUsers') || '{}');
+                    const keys = Object.keys(users);
+                    if (keys.length === 1) return keys[0];
+                }catch(e){}
+
+                return '';
+            }
+
+            const phone = getCurrentUserPhone();
+            userAvatar.textContent = phone ? phone : 'User';
+
+            // Click avatar -> back to login page
+            userAvatar.addEventListener('click', function(){
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
 </body>
 </html>

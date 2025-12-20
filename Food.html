@@ -4,6 +4,42 @@
     <meta charset="UTF-8">
     <title>Food Guide</title>
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Only add what you asked (same behaviors as Travel) -->
+    <style>
+        /* Active nav: bounce + bigger + move up (same as Travel/AI Chat) */
+        .nav-links a.active{
+            display: inline-block;
+            transform: translateY(-6px) scale(1.15);
+            font-weight: 700;
+            animation: navPop 450ms ease-out;
+            transition: transform 220ms ease, font-weight 220ms ease;
+        }
+        @keyframes navPop{
+            0%{ transform: translateY(0) scale(1); }
+            60%{ transform: translateY(-12px) scale(1.25); }
+            100%{ transform: translateY(-6px) scale(1.15); }
+        }
+
+        /* User avatar: clickable + show phone + truncate if too long (same as Travel) */
+        .user-avatar{
+            cursor: pointer;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Make big section title clickable like Travel */
+        .section-title a.section-link{
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .section-title a.section-link:hover{
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -20,46 +56,123 @@
                 <span>🔍</span>
                 <input type="text" placeholder="Search anything">
             </div>
-            <div class="user-avatar">User</div>
+            <!-- Same as Travel: clickable avatar shows phone and returns to login -->
+            <div class="user-avatar" id="userAvatar" title="Click to go to Login">User</div>
             <span>🏷️</span>
         </div>
     </nav>
 
     <section class="hero-section">
-        <a href="#" class="hero-card">
+        <!-- Hero cards -> details page (same pattern as Travel) -->
+        <a href="details.html?id=f1&topic=food" class="hero-card">
+            <!-- NOTE: Replace this src anytime (keep your common format if you want local images) -->
             <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=600&q=80" alt="Food">
             <div class="hero-text"><h3>Dishes for cold weather</h3></div>
         </a>
-        <a href="#" class="hero-card">
+
+        <a href="details.html?id=f2&topic=food" class="hero-card">
             <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" alt="Pizza">
             <div class="hero-text"><h3>DameiLe Pizza</h3></div>
         </a>
-        <a href="#" class="hero-card">
+
+        <a href="details.html?id=f3&topic=food" class="hero-card">
             <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80" alt="BBQ">
             <div class="hero-text"><h3>Dishes suitable for beginners</h3></div>
         </a>
     </section>
 
     <div class="content-container">
-        <h2 class="section-title">Popular Posts</h2>
+        <!-- Big title -> middle page -->
+        <h2 class="section-title">
+            <a class="section-link" href="middle.html?topic=food">Popular Posts</a>
+        </h2>
+
         <div class="card-grid">
-            <a href="#" class="post-card">
+            <!-- All cards -> details page -->
+            <a href="details.html?id=f4&topic=food" class="post-card">
                 <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" alt="Salad">
                 <div class="post-info"><div class="post-title">Healthy Salad Options</div></div>
             </a>
-            <a href="#" class="post-card">
+
+            <a href="details.html?id=f5&topic=food" class="post-card">
                 <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=400&q=80" alt="Pancakes">
                 <div class="post-info"><div class="post-title">Best Breakfast in Town</div></div>
             </a>
-            <a href="#" class="post-card">
+
+            <a href="details.html?id=f6&topic=food" class="post-card">
                 <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=400&q=80" alt="Steak">
                 <div class="post-info"><div class="post-title">Dinner Vlog: Steak Night</div></div>
             </a>
-            <a href="#" class="post-card">
+
+            <a href="details.html?id=f7&topic=food" class="post-card">
                 <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=400&q=80" alt="Curry">
                 <div class="post-info"><div class="post-title">How to make delicious curry</div></div>
             </a>
         </div>
     </div>
+
+    <div class="content-container">
+        <!-- Optional second section (same pattern as Travel): title -> middle, cards -> details -->
+        <h2 class="section-title">
+            <a class="section-link" href="middle.html?topic=food">New Posts</a>
+        </h2>
+
+        <div class="card-grid">
+            <a href="details.html?id=f8&topic=food" class="post-card">
+                <img src="https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=400&q=80" alt="Soup">
+                <div class="post-info"><div class="post-title">Warm Soup Ideas for Winter</div></div>
+            </a>
+
+            <a href="details.html?id=f9&topic=food" class="post-card">
+                <img src="https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?auto=format&fit=crop&w=400&q=80" alt="Dessert">
+                <div class="post-info"><div class="post-title">Dessert Guide: Sweet & Easy</div></div>
+            </a>
+
+            <a href="details.html?id=f10&topic=food" class="post-card">
+                <img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=400&q=80" alt="Coffee">
+                <div class="post-info"><div class="post-title">Coffee Route: Best Cafés</div></div>
+            </a>
+
+            <a href="details.html?id=f11&topic=food" class="post-card">
+                <img src="https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=400&q=80" alt="Noodles">
+                <div class="post-info"><div class="post-title">Late-night Noodles Checklist</div></div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const userAvatar = document.getElementById('userAvatar');
+
+            // Same logic as Travel/AI Chat: display phone if available
+            function getCurrentUserPhone(){
+                const candidates = [
+                    localStorage.getItem('travelAgentCurrentUser'),
+                    localStorage.getItem('travelAgentCurrentPhone'),
+                    localStorage.getItem('currentUserPhone'),
+                    localStorage.getItem('travelAgentLastUser')
+                ].filter(Boolean);
+
+                if (candidates.length > 0) return candidates[0];
+
+                // fallback: if only one registered account exists, show it
+                try{
+                    const users = JSON.parse(localStorage.getItem('travelAgentUsers') || '{}');
+                    const keys = Object.keys(users);
+                    if (keys.length === 1) return keys[0];
+                }catch(e){}
+
+                return '';
+            }
+
+            const phone = getCurrentUserPhone();
+            userAvatar.textContent = phone ? phone : 'User';
+
+            // Click avatar -> back to login page
+            userAvatar.addEventListener('click', function(){
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
 </body>
 </html>

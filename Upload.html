@@ -59,6 +59,26 @@
             font-weight: bold;
         }
 
+        /* ===== Override: on this page, only .active should be highlighted ===== */
+        .nav-links li:nth-child(5) a {
+            color: #333333;
+            text-decoration: none;
+        }
+
+        /* ===== Same as Travel: active nav bounce + bigger ===== */
+        .nav-links a.active{
+            display: inline-block;
+            transform: translateY(-6px) scale(1.15);
+            font-weight: 700;
+            animation: navPop 450ms ease-out;
+            transition: transform 220ms ease, font-weight 220ms ease;
+        }
+        @keyframes navPop{
+            0%{ transform: translateY(0) scale(1); }
+            60%{ transform: translateY(-12px) scale(1.25); }
+            100%{ transform: translateY(-6px) scale(1.15); }
+        }
+
         .nav-right {
             display: flex;
             align-items: center;
@@ -84,9 +104,6 @@
             color: #666;
         }
 
-      
-        
-
         .user-avatar {
             display: flex;
             align-items: center;
@@ -94,6 +111,13 @@
             font-size: 14px;
             font-weight: 600;
             color: #333333; /* 使用CSS变量中的text-dark */
+
+            /* ===== Same as Travel: clickable + truncate ===== */
+            cursor: pointer;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .tag-icon {
@@ -184,7 +208,7 @@
             font-size: 18px;
             color: #444;
         }
-        
+
         .section-title::before {
             content: '';
             width: 4px;
@@ -194,20 +218,92 @@
             border-radius: 2px;
         }
 
+        /* ===== New: make section title link look the same ===== */
+        .section-title a{
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .section-title a:hover{
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        /* ===== New: comment upload UI ===== */
+        .comment-form {
+            background: rgba(0,0,0,0.02);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+        .comment-form textarea{
+            width: 100%;
+            min-height: 90px;
+            resize: vertical;
+            border: 1px solid rgba(0,0,0,0.14);
+            border-radius: 12px;
+            padding: 10px 12px;
+            outline: none;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .comment-form textarea:focus{
+            border-color: rgba(230,57,70,0.55);
+            box-shadow: 0 0 0 3px rgba(230,57,70,0.12);
+        }
+        .comment-row{
+            display:flex;
+            align-items:center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .comment-row input[type="file"]{
+            font-size: 13px;
+        }
+        .comment-btn{
+            border: none;
+            cursor: pointer;
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-weight: 800;
+            background: #e63946;
+            color: #fff;
+        }
+        .comment-hint{
+            margin-top: 10px;
+            font-size: 12px;
+            color: rgba(230,57,70,0.9);
+            display: none;
+        }
+        .comment-preview{
+            margin-top: 10px;
+            display: none;
+        }
+        .comment-preview img{
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            display:block;
+        }
+
         /* Insta Grid */
         .insta-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
         }
-        
+
         .insta-item {
             border-radius: 12px;
             overflow: hidden;
             aspect-ratio: 1;
             display: block; /* 确保链接也是块级显示 */
         }
-        
+
         .insta-item img {
             width: 100%;
             height: 100%;
@@ -235,7 +331,7 @@
         .footer-col {
             flex: 1;
         }
-        
+
         .footer-col.news { flex: 2; } /* Mega News 宽一点 */
 
         .footer-title {
@@ -246,7 +342,7 @@
             display: flex;
             align-items: center;
         }
-        
+
         .footer-title::before {
             content: '';
             display: inline-block;
@@ -268,7 +364,7 @@
             position: relative;
             max-width: 400px;
         }
-        
+
         .newsletter-box input {
             width: 100%;
             padding: 12px 15px;
@@ -277,7 +373,7 @@
             background: #fff;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        
+
         .newsletter-box button {
             position: absolute;
             right: 5px;
@@ -292,9 +388,9 @@
             list-style: none;
             padding: 0;
         }
-        
+
         .cat-list li { margin-bottom: 12px; }
-        
+
         .cat-list a {
             text-decoration: none;
             color: #555;
@@ -312,9 +408,9 @@
             margin-right: 10px;
             font-weight: 500;
         }
-        
+
         .bg-insta { background-color: #ff5c8d; }
-        
+
         .bg-twitter { background-color: #55acee; }
 
         .footer-bottom {
@@ -325,7 +421,7 @@
             font-size: 12px;
             color: #888;
         }
-        
+
         .footer-bottom a {
             color: #888;
             text-decoration: none;
@@ -343,12 +439,12 @@
             <li><a href="Ticket.html">Ticket</a></li>
             <li><a href="Upload.html" class="active">Upload</a></li>
         </ul>
-         <div class="nav-right">
+        <div class="nav-right">
             <div class="search-bar">
                 <span>🔍</span>
                 <input type="text" placeholder="Search anything">
             </div>
-            <div class="user-avatar">User</div>
+            <div class="user-avatar" id="userAvatar" title="Click to go to Login">User</div>
             <span>🏷️</span>
         </div>
     </nav>
@@ -380,6 +476,26 @@
     <div class="upload-layout">
         <div class="comments-section">
             <h2 class="section-title">New Comments</h2>
+
+            <!-- ===== Comment upload feature ===== -->
+            <div class="comment-form">
+                <textarea id="commentText" placeholder="Write a comment..."></textarea>
+
+                <div class="comment-row">
+                    <input id="commentFile" type="file" accept="image/*">
+                    <button class="comment-btn" id="postCommentBtn">Post</button>
+                </div>
+
+                <div class="comment-preview" id="commentPreview">
+                    <img id="previewImg" src="" alt="preview">
+                </div>
+
+                <div class="comment-hint" id="commentHint"></div>
+            </div>
+
+            <!-- New user comments will be inserted here (keeps your existing comments unchanged) -->
+            <div id="userComments"></div>
+
             <div style="margin-bottom: 20px;">
                 <h4>Ellsmartx</h4>
                 <p style="font-size: 14px; color: #666;">How Nice Does This Look 😍 I Feel It Should Be Delicious...</p>
@@ -399,17 +515,22 @@
         </div>
 
         <div class="instagram-section">
-            <h2 class="section-title">Follow On Instagram</h2>
+            <!-- ===== Requirement: title clickable like Travel (go to middle page) ===== -->
+            <h2 class="section-title">
+                <a href="middle.html?topic=instagram">Follow On Instagram</a>
+            </h2>
+
+            <!-- ===== Requirement: images clickable (go to details page) ===== -->
             <div class="insta-grid">
-                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?w=300" alt="Car"></a>
-                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300" alt="Pug"></a>
-                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300" alt="Neon"></a>
-                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=300" alt="Food"></a>
-                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" alt="Headphone"></a>
-                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300" alt="Dance"></a>
-                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=300" alt="Dog"></a>
-                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=300" alt="Neon"></a>
-                <a href="#" class="insta-item"><img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?w=300" alt="Boxer"></a>
+                <a href="details.html?topic=instagram&id=ig1" class="insta-item"><img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?w=300" alt="Car"></a>
+                <a href="details.html?topic=instagram&id=ig2" class="insta-item"><img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300" alt="Pug"></a>
+                <a href="details.html?topic=instagram&id=ig3" class="insta-item"><img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300" alt="Neon"></a>
+                <a href="details.html?topic=instagram&id=ig4" class="insta-item"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=300" alt="Food"></a>
+                <a href="details.html?topic=instagram&id=ig5" class="insta-item"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" alt="Headphone"></a>
+                <a href="details.html?topic=instagram&id=ig6" class="insta-item"><img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300" alt="Dance"></a>
+                <a href="details.html?topic=instagram&id=ig7" class="insta-item"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=300" alt="Dog"></a>
+                <a href="details.html?topic=instagram&id=ig8" class="insta-item"><img src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=300" alt="Neon"></a>
+                <a href="details.html?topic=instagram&id=ig9" class="insta-item"><img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?w=300" alt="Boxer"></a>
             </div>
         </div>
     </div>
@@ -458,5 +579,161 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            /* ===== Same as Travel: user avatar shows phone and is clickable ===== */
+            const userAvatar = document.getElementById('userAvatar');
+
+            function getCurrentUserPhone(){
+                const candidates = [
+                    localStorage.getItem('travelAgentCurrentUser'),
+                    localStorage.getItem('travelAgentCurrentPhone'),
+                    localStorage.getItem('currentUserPhone'),
+                    localStorage.getItem('travelAgentLastUser')
+                ].filter(Boolean);
+
+                if (candidates.length > 0) return candidates[0];
+
+                try{
+                    const users = JSON.parse(localStorage.getItem('travelAgentUsers') || '{}');
+                    const keys = Object.keys(users);
+                    if (keys.length === 1) return keys[0];
+                }catch(e){}
+
+                return '';
+            }
+
+            const phone = getCurrentUserPhone();
+            userAvatar.textContent = phone ? phone : 'User';
+            userAvatar.addEventListener('click', function(){
+                window.location.href = 'index.html';
+            });
+
+            /* ===== Comment upload feature (localStorage) ===== */
+            const STORAGE_KEY = 'travelAgentUploadComments';
+            const userCommentsEl = document.getElementById('userComments');
+
+            const commentText = document.getElementById('commentText');
+            const commentFile = document.getElementById('commentFile');
+            const postBtn = document.getElementById('postCommentBtn');
+
+            const hint = document.getElementById('commentHint');
+            const previewWrap = document.getElementById('commentPreview');
+            const previewImg = document.getElementById('previewImg');
+
+            let pendingImageDataUrl = '';
+
+            function showHint(msg){
+                hint.textContent = msg;
+                hint.style.display = msg ? 'block' : 'none';
+            }
+
+            function escapeHtml(s){
+                return String(s || '')
+                    .replaceAll('&', '&amp;')
+                    .replaceAll('<', '&lt;')
+                    .replaceAll('>', '&gt;')
+                    .replaceAll('"', '&quot;')
+                    .replaceAll("'", '&#039;');
+            }
+
+            function loadSavedComments(){
+                try{
+                    const arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                    if (!Array.isArray(arr)) return [];
+                    return arr;
+                }catch(e){
+                    return [];
+                }
+            }
+
+            function saveComments(arr){
+                try{
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+                }catch(e){
+                    // If storage fails, still allow UI comment but without persistence.
+                }
+            }
+
+            function renderComments(){
+                const arr = loadSavedComments();
+                userCommentsEl.innerHTML = arr.map(c => {
+                    const name = escapeHtml(c.name || 'User');
+                    const text = escapeHtml(c.text || '');
+                    const time = escapeHtml(c.time || '');
+                    const img = c.img ? `<div style="margin-top:10px;"><img src="${c.img}" alt="comment image" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;display:block;"></div>` : '';
+                    return `
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="margin:0 0 6px 0;">${name} <span style="font-weight:400;color:#999;font-size:12px;">${time}</span></h4>
+                            <p style="font-size: 14px; color: #666; margin:0;">${text}</p>
+                            ${img}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderComments();
+
+            commentFile.addEventListener('change', function(){
+                showHint('');
+                pendingImageDataUrl = '';
+                previewWrap.style.display = 'none';
+                previewImg.src = '';
+
+                const file = commentFile.files && commentFile.files[0];
+                if (!file) return;
+
+                if (!file.type || !file.type.startsWith('image/')){
+                    commentFile.value = '';
+                    showHint('Please upload an image file.');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(){
+                    pendingImageDataUrl = String(reader.result || '');
+                    previewImg.src = pendingImageDataUrl;
+                    previewWrap.style.display = 'block';
+                };
+                reader.onerror = function(){
+                    commentFile.value = '';
+                    showHint('Feature under development.');
+                };
+                reader.readAsDataURL(file);
+            });
+
+            postBtn.addEventListener('click', function(){
+                showHint('');
+
+                const text = (commentText.value || '').trim();
+                if (!text){
+                    showHint('Please write something before posting.');
+                    return;
+                }
+
+                const name = phone ? phone : 'User';
+                const now = new Date();
+                const time = now.toLocaleString();
+
+                const arr = loadSavedComments();
+                arr.unshift({
+                    name,
+                    text,
+                    time,
+                    img: pendingImageDataUrl || ''
+                });
+                saveComments(arr);
+                renderComments();
+
+                // reset
+                commentText.value = '';
+                commentFile.value = '';
+                pendingImageDataUrl = '';
+                previewWrap.style.display = 'none';
+                previewImg.src = '';
+            });
+        });
+    </script>
 </body>
 </html>
