@@ -1,38 +1,38 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en"> <!-- Use English to keep UI consistent -->
 <head>
     <meta charset="UTF-8">
     <title>Upload & Comments</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* 为了复现图片效果，补充必要的 CSS */
+        /* For reproducing the UI style in your screenshot */
         body {
-            background-color: #f2fbf2; /* 图片中非常淡的背景色 */
+            background-color: #f2fbf2; /* very light green background */
             margin: 0;
             font-family: Arial, sans-serif;
             color: #333;
         }
 
-        /* --- 导航栏修正：使用css/style.css中的样式 --- */
+        /* --- Navbar: keep using css/style.css baseline styles --- */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #84F318; /* 使用CSS变量中的primary-green */
-            padding: 15px 40px; /* 使用CSS文件中的值 */
+            background-color: #84F318; /* primary-green */
+            padding: 15px 40px;
             position: sticky;
             top: 0;
             z-index: 1000;
-            margin: 0; /* 移除自定义外边距，使用CSS文件中的样式 */
-            border-radius: 0; /* 移除圆角，使用CSS文件中的样式 */
-            box-shadow: none; /* 移除阴影，使用CSS文件中的样式 */
+            margin: 0;
+            border-radius: 0;
+            box-shadow: none;
         }
 
         .nav-links {
             display: flex;
             gap: 30px;
             font-weight: bold;
-            font-size: 16px; /* 使用CSS文件中的值 */
+            font-size: 16px;
             list-style: none;
             padding: 0;
             margin: 0;
@@ -40,21 +40,21 @@
 
         .nav-links a {
             text-decoration: none;
-            color: #333333; /* 使用CSS变量中的text-dark */
-            font-size: 16px; /* 使用CSS文件中的值 */
-            font-weight: bold; /* 使用CSS文件中的值 */
+            color: #333333;
+            font-size: 16px;
+            font-weight: bold;
         }
 
         .nav-links li a:hover,
         .nav-links li a.active {
-            color: #FF0000; /* 使用CSS变量中的active-red */
+            color: #FF0000;
             text-decoration: underline;
             text-underline-offset: 5px;
         }
 
-        /* Ticket 红色高亮 - 修改为第5个菜单项 */
+        /* Ticket red highlight (kept) - 5th menu item */
         .nav-links li:nth-child(5) a {
-            color: #FF0000; /* 使用CSS变量中的active-red */
+            color: #FF0000;
             font-size: 16px;
             font-weight: bold;
         }
@@ -82,7 +82,7 @@
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 20px; /* 使用CSS文件中的值 */
+            gap: 20px;
         }
 
         .search-bar {
@@ -91,7 +91,7 @@
             padding: 5px 15px;
             display: flex;
             align-items: center;
-            width: 250px; /* 使用CSS文件中的值 */
+            width: 250px;
             position: relative;
         }
 
@@ -99,7 +99,7 @@
             border: none;
             outline: none;
             width: 100%;
-            margin-left: 10px; /* 使用CSS文件中的值 */
+            margin-left: 10px;
             font-size: 14px;
             color: #666;
         }
@@ -110,9 +110,9 @@
             gap: 10px;
             font-size: 14px;
             font-weight: 600;
-            color: #333333; /* 使用CSS变量中的text-dark */
+            color: #333333;
 
-            /* ===== Same as Travel: clickable + truncate ===== */
+            /* Same as Travel: clickable + truncate */
             cursor: pointer;
             max-width: 140px;
             overflow: hidden;
@@ -120,11 +120,7 @@
             white-space: nowrap;
         }
 
-        .tag-icon {
-            font-size: 18px;
-        }
-
-        /* --- 英雄区域布局 --- */
+        /* --- Hero layout --- */
         .hero-section {
             max-width: 1200px;
             margin: 20px auto;
@@ -134,7 +130,6 @@
             overflow-x: auto;
         }
 
-        /* 修改：将 .hero-card 设为 flex item 并且是链接时的样式 */
         a.hero-card, .hero-card {
             flex: 1;
             min-width: 300px;
@@ -143,11 +138,10 @@
             overflow: hidden;
             position: relative;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: block; /* 确保a标签作为块级元素 */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* 添加过渡动画 */
+            display: block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* 鼠标悬停特效：上浮 + 阴影 */
         a.hero-card:hover, .hero-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
@@ -168,7 +162,7 @@
             background: rgba(255, 255, 255, 0.9);
             padding: 10px;
             font-size: 14px;
-            color: #333333; /* 使用CSS变量中的text-dark */
+            color: #333333;
         }
 
         .hero-text h3 {
@@ -180,10 +174,10 @@
         .hero-text p {
             margin: 0;
             font-size: 12px;
-            color: #666666; /* 使用CSS变量中的text-light */
+            color: #666666;
         }
 
-        /* --- 中间内容区域布局 --- */
+        /* --- Main content layout --- */
         .upload-layout {
             display: flex;
             max-width: 1200px;
@@ -194,10 +188,10 @@
 
         .comments-section, .instagram-section {
             flex: 1;
-            background: #fff; /* 不透明白色背景 */
-            border-radius: 15px; /* 大圆角 */
+            background: #fff;
+            border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.03); /* 轻微阴影 */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
         }
 
         .section-title {
@@ -213,12 +207,12 @@
             content: '';
             width: 4px;
             height: 18px;
-            background: #e63946; /* 标题红竖线 */
+            background: #e63946;
             margin-right: 10px;
             border-radius: 2px;
         }
 
-        /* ===== New: make section title link look the same ===== */
+        /* Make section title link look the same */
         .section-title a{
             color: inherit;
             text-decoration: none;
@@ -229,7 +223,7 @@
             text-underline-offset: 4px;
         }
 
-        /* ===== New: comment upload UI ===== */
+        /* ===== Comment upload UI ===== */
         .comment-form {
             background: rgba(0,0,0,0.02);
             border: 1px solid rgba(0,0,0,0.08);
@@ -260,9 +254,37 @@
             margin-top: 10px;
             flex-wrap: wrap;
         }
-        .comment-row input[type="file"]{
-            font-size: 13px;
+
+        /* ===== Custom file picker (always English) ===== */
+        .file-picker{
+            display:flex;
+            align-items:center;
+            gap: 10px;
         }
+        .hidden-file-input{
+            position:absolute;
+            left:-9999px;
+            width:1px;
+            height:1px;
+            opacity:0;
+        }
+        .file-btn{
+            border: 1px solid rgba(0,0,0,0.2);
+            background: #fff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .file-name{
+            font-size: 13px;
+            color: #666;
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         .comment-btn{
             border: none;
             cursor: pointer;
@@ -301,7 +323,7 @@
             border-radius: 12px;
             overflow: hidden;
             aspect-ratio: 1;
-            display: block; /* 确保链接也是块级显示 */
+            display: block;
         }
 
         .insta-item img {
@@ -316,23 +338,16 @@
             transform: scale(1.1);
         }
 
-        /* --- 新增：Footer 样式 --- */
-        .footer-wrapper {
-            margin-top: 40px;
-        }
-
+        /* --- Footer styles --- */
+        .footer-wrapper { margin-top: 40px; }
         .footer-main {
             display: flex;
             padding: 40px 60px;
             gap: 60px;
-            background-color: transparent; /* 上半部分背景透明 */
+            background-color: transparent;
         }
-
-        .footer-col {
-            flex: 1;
-        }
-
-        .footer-col.news { flex: 2; } /* Mega News 宽一点 */
+        .footer-col { flex: 1; }
+        .footer-col.news { flex: 2; }
 
         .footer-title {
             font-size: 16px;
@@ -342,7 +357,6 @@
             display: flex;
             align-items: center;
         }
-
         .footer-title::before {
             content: '';
             display: inline-block;
@@ -351,7 +365,6 @@
             background-color: #e63946;
             margin-right: 8px;
         }
-
         .footer-text {
             font-size: 13px;
             color: #666;
@@ -359,12 +372,7 @@
             margin-bottom: 30px;
             text-align: justify;
         }
-
-        .newsletter-box {
-            position: relative;
-            max-width: 400px;
-        }
-
+        .newsletter-box { position: relative; max-width: 400px; }
         .newsletter-box input {
             width: 100%;
             padding: 12px 15px;
@@ -373,7 +381,6 @@
             background: #fff;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-
         .newsletter-box button {
             position: absolute;
             right: 5px;
@@ -383,19 +390,9 @@
             cursor: pointer;
             color: #666;
         }
-
-        .cat-list {
-            list-style: none;
-            padding: 0;
-        }
-
+        .cat-list { list-style: none; padding: 0; }
         .cat-list li { margin-bottom: 12px; }
-
-        .cat-list a {
-            text-decoration: none;
-            color: #555;
-            font-size: 13px;
-        }
+        .cat-list a { text-decoration: none; color: #555; font-size: 13px; }
 
         .social-btn {
             display: inline-flex;
@@ -408,20 +405,17 @@
             margin-right: 10px;
             font-weight: 500;
         }
-
         .bg-insta { background-color: #ff5c8d; }
-
         .bg-twitter { background-color: #55acee; }
 
         .footer-bottom {
-            background-color: #e8e8e8; /* 底部灰色条 */
+            background-color: #e8e8e8;
             padding: 15px 60px;
             display: flex;
             justify-content: space-between;
             font-size: 12px;
             color: #888;
         }
-
         .footer-bottom a {
             color: #888;
             text-decoration: none;
@@ -450,22 +444,22 @@
     </nav>
 
     <section class="hero-section">
-        <a href="#" class="hero-card">
-            <img src="image\1.png" alt="Moscow">
+        <a href="details.html?topic=uploadHero&id=hero1" class="hero-card">
+            <img src="image\1.png" alt="Moscow"><!-- TODO: replace image\1.png -->
             <div class="hero-text">
                 <h3>Red Square In Moscow</h3>
                 <p>Ah, The Joy Of The Open Road...</p>
             </div>
         </a>
-        <a href="#" class="hero-card">
-            <img src="image\2.png" alt="Night View">
+        <a href="details.html?topic=uploadHero&id=hero2" class="hero-card">
+            <img src="image\2.png" alt="Night View"><!-- TODO: replace image\2.png -->
             <div class="hero-text">
                 <h3>My Travel To Moscow</h3>
                 <p>Download Torrents From Verified...</p>
             </div>
         </a>
-        <a href="#" class="hero-card">
-            <img src="image\3.png" alt="Couple">
+        <a href="details.html?topic=uploadHero&id=hero3" class="hero-card">
+            <img src="image\3.png" alt="Couple"><!-- TODO: replace image\3.png -->
             <div class="hero-text">
                 <h3>We Are In Moscow</h3>
                 <p>A Single Monitor Manifesto...</p>
@@ -477,12 +471,18 @@
         <div class="comments-section">
             <h2 class="section-title">New Comments</h2>
 
-            <!-- ===== Comment upload feature ===== -->
+            <!-- Comment upload feature (English only) -->
             <div class="comment-form">
                 <textarea id="commentText" placeholder="Write a comment..."></textarea>
 
                 <div class="comment-row">
-                    <input id="commentFile" type="file" accept="image/*">
+                    <!-- Custom file picker: avoid browser localized text -->
+                    <div class="file-picker">
+                        <input id="commentFile" type="file" accept="image/*" class="hidden-file-input">
+                        <button type="button" class="file-btn" id="chooseFileBtn">Choose File</button>
+                        <span class="file-name" id="fileNameText">No file chosen</span>
+                    </div>
+
                     <button class="comment-btn" id="postCommentBtn">Post</button>
                 </div>
 
@@ -515,12 +515,10 @@
         </div>
 
         <div class="instagram-section">
-            <!-- ===== Requirement: title clickable like Travel (go to middle page) ===== -->
             <h2 class="section-title">
                 <a href="middle.html?topic=instagram">Follow On Instagram</a>
             </h2>
 
-            <!-- ===== Requirement: images clickable (go to details page) ===== -->
             <div class="insta-grid">
                 <a href="details.html?topic=instagram&id=ig1" class="insta-item"><img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?w=300" alt="Car"></a>
                 <a href="details.html?topic=instagram&id=ig2" class="insta-item"><img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300" alt="Pug"></a>
@@ -582,7 +580,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function(){
-            /* ===== Same as Travel: user avatar shows phone and is clickable ===== */
+            /* Same as Travel: user avatar shows phone and is clickable */
             const userAvatar = document.getElementById('userAvatar');
 
             function getCurrentUserPhone(){
@@ -610,12 +608,20 @@
                 window.location.href = 'index.html';
             });
 
-            /* ===== Comment upload feature (localStorage) ===== */
+            /* Custom file picker: always English */
+            const commentFile = document.getElementById('commentFile');
+            const chooseFileBtn = document.getElementById('chooseFileBtn');
+            const fileNameText = document.getElementById('fileNameText');
+
+            chooseFileBtn.addEventListener('click', function(){
+                commentFile.click();
+            });
+
+            /* Comment upload feature (localStorage) */
             const STORAGE_KEY = 'travelAgentUploadComments';
             const userCommentsEl = document.getElementById('userComments');
 
             const commentText = document.getElementById('commentText');
-            const commentFile = document.getElementById('commentFile');
             const postBtn = document.getElementById('postCommentBtn');
 
             const hint = document.getElementById('commentHint');
@@ -682,10 +688,13 @@
                 previewImg.src = '';
 
                 const file = commentFile.files && commentFile.files[0];
+                fileNameText.textContent = file ? file.name : 'No file chosen';
+
                 if (!file) return;
 
                 if (!file.type || !file.type.startsWith('image/')){
                     commentFile.value = '';
+                    fileNameText.textContent = 'No file chosen';
                     showHint('Please upload an image file.');
                     return;
                 }
@@ -698,6 +707,7 @@
                 };
                 reader.onerror = function(){
                     commentFile.value = '';
+                    fileNameText.textContent = 'No file chosen';
                     showHint('Feature under development.');
                 };
                 reader.readAsDataURL(file);
@@ -729,6 +739,7 @@
                 // reset
                 commentText.value = '';
                 commentFile.value = '';
+                fileNameText.textContent = 'No file chosen';
                 pendingImageDataUrl = '';
                 previewWrap.style.display = 'none';
                 previewImg.src = '';
